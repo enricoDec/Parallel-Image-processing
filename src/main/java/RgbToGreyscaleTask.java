@@ -1,5 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -10,9 +8,9 @@ import java.util.concurrent.BlockingQueue;
  **/
 public class RgbToGreyscaleTask implements Runnable {
 
-    private BlockingQueue<Array[]> queue;
+    private BlockingQueue<int[]> queue;
 
-    public RgbToGreyscaleTask(BlockingQueue<Array[]> queue) {
+    public RgbToGreyscaleTask(BlockingQueue<int[]> queue) {
         this.queue = queue;
     }
 
