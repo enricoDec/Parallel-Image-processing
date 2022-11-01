@@ -17,5 +17,6 @@ public class Main {
         BufferedImage image =  ImageIO.read(file);
         image.getRGB(1,1);
 
+
     }
 }
