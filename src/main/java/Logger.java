@@ -65,4 +65,11 @@ public class Logger implements Runnable {
     public static void cleanup() {
         RUNNING.set(false);
     }
+
+    public enum TYPE {
+        INFO,
+        DEBUG,
+        WARNING,
+        ERROR
+    }
 }
