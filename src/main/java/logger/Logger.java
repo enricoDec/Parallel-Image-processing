@@ -100,12 +100,6 @@ public class Logger implements Runnable {
                 e.printStackTrace();
             }
         }
-        try {
-            os.write("Shutting Logger...".getBytes(StandardCharsets.UTF_8));
-            os.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void cleanup() {
@@ -114,10 +108,10 @@ public class Logger implements Runnable {
 
     public enum TYPE {
         NONE, // no output
-        INFO, // only info
-        DEBUG, // all info
-        WARNING, // only warning
-        ERROR // only error
+        INFO,
+        DEBUG,
+        WARNING,
+        ERROR
     }
 
     private static class LogMessage {

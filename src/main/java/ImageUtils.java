@@ -19,4 +19,12 @@ public class ImageUtils {
         }
         return array;
     }
+
+    public static int[] getImageRow(int[][] imgArray, int rowNumber) {
+        int[] row = new int[imgArray.length];
+        for (int i = 0; i < row.length; i++) {
+            row[i] = imgArray[i][rowNumber];
+        }
+        return row;
+    }
 }
