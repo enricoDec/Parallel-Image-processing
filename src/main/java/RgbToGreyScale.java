@@ -5,7 +5,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,22 +33,15 @@ public class RgbToGreyScale {
         long startTime = System.nanoTime();
         BufferedImage image = ImageIO.read(file);
         int[][] imgRgbArray = ImageUtils.imageToRgbArray(image);
-        int height = image.getHeight();
-        // Split Image in rows
-        // TODO: 01.11.22 Conversion of Array actually useless (but helps understanding)
-        ArrayList<int[]> rows = new ArrayList<>(height);
-        for (int i = 0; i < height; i++) {
-            rows.add(ImageUtils.getImageRow(imgRgbArray, i));
-        }
         // Make Tasks
         ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
         Map<Integer, int[]> results =
                 Collections.synchronizedMap(new TreeMap<>()); // Key is rowIndex, Value is row
         long startConversionTime = System.nanoTime();
-        for (int row = 0; row < rows.size(); row++) {
-            executor.execute(new RgbToGreyscaleTask(rows.get(row), results, row));
+        for (int row = 0; row < image.getHeight(); row++) {
+            executor.execute(new RgbToGreyscaleTask(imgRgbArray, results, row));
         }
-        logger.log("Started " + rows.size() + " Tasks with " + threadPoolSize + " Threads.", Logger.TYPE.INFO);
+        logger.log("Started " + image.getHeight() + " Tasks with " + threadPoolSize + " Threads.", Logger.TYPE.INFO);
         executor.shutdown();
         boolean terminated = executor.awaitTermination(5, TimeUnit.MINUTES);
         this.conversionTime = System.nanoTime() - startConversionTime;

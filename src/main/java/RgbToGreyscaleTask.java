@@ -13,31 +13,31 @@ public class RgbToGreyscaleTask implements Runnable {
 
     private static final Logger logger = Logger.getInstance();
 
-    private final int[] imgRow;
+    private final int[][] imgRgbArray;
 
     private final Map<Integer, int[]> results;
 
-    private final int rowID;
+    private final int rowIndex;
 
-    public RgbToGreyscaleTask(int[] imgRow, Map<Integer, int[]> results, int rowID) {
-        this.imgRow = imgRow;
+    public RgbToGreyscaleTask(int[][] imgRgbArray, Map<Integer, int[]> results, int rowIndex) {
+        this.imgRgbArray = imgRgbArray;
         this.results = results;
-        this.rowID = rowID;
+        this.rowIndex = rowIndex;
     }
 
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        int[] row = new int[imgRow.length];
-        for (int i = 0; i < imgRow.length; i++) {
-            Color c = new Color(this.imgRow[i]);
+        int[] row = new int[imgRgbArray.length];
+        for (int i = 0; i < row.length; i++) {
+            Color c = new Color(imgRgbArray[i][rowIndex]);
             int r = (int) (c.getRed() * 0.21);
             int g = (int) (c.getGreen() * 0.72);
             int b = (int) (c.getBlue() * 0.07);
             row[i] = new Color(r + g + b, r + g + b, r + g + b).getRGB();
         }
         synchronized (results) {
-            results.put(this.rowID, row);
+            results.put(this.rowIndex, row);
         }
         //logger.log(String.format("Thread %s Row[%d]", Thread.currentThread().getName(), rowID), Logger.TYPE.DEBUG);
     }

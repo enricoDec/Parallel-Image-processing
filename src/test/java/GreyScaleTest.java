@@ -27,9 +27,9 @@ public class GreyScaleTest {
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/animal/2.kitten_medium.jpg"));
         String imageName = "2.kitten_medium.jpg";
         int repeat = 100;
-        int threadPoolSize = 1;
+        int threadPoolSize = Runtime.getRuntime().availableProcessors();
         boolean successful = false;
-        File csvFile = new File("src/main/resources/testSinglecore.csv");
+        File csvFile = new File("src/main/resources/testMulticore.csv");
         CSVFileWriter csvFileWriter = new CSVFileWriter(csvFile, CSV_HEADER);
         csvFileWriter.setSeparator(";");
 
