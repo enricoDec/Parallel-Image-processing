@@ -11,7 +11,7 @@ import java.util.Map;
  **/
 public class RgbToGreyscaleTask implements Runnable {
 
-    private static Logger logger = Logger.getInstance();
+    private static final Logger logger = Logger.getInstance();
 
     private final int[] imgRow;
 

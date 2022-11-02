@@ -1,4 +1,7 @@
+package utils;
+
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 /**
  * @author : Enrico Gamil Toros
@@ -26,5 +29,22 @@ public class ImageUtils {
             row[i] = imgArray[i][rowNumber];
         }
         return row;
+    }
+
+    /**
+     * Given a Map of RowId and Row RGB value set thr RGB for each Pixel of the given Image
+     *
+     * @param image   {@link BufferedImage}
+     * @param results Map of RowId and Row RGB value
+     * @return Resulting Image
+     */
+    public static BufferedImage setRgbByRow(BufferedImage image, Map<Integer, int[]> results) {
+        for (int y = 0; y < image.getHeight(); y++) {
+            int[] row = results.get(y);
+            for (int x = 0; x < image.getWidth(); x++) {
+                image.setRGB(x, y, row[x]);
+            }
+        }
+        return image;
     }
 }

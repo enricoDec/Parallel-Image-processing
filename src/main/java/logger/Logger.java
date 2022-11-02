@@ -2,6 +2,7 @@ package logger;
 
 import jakarta.annotation.Nullable;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @version : 1.0
  * @since : 01.11.22
  **/
-public class Logger implements Runnable {
+public class Logger implements Closeable {
 
     private static Logger instance = null;
 
@@ -26,8 +27,6 @@ public class Logger implements Runnable {
     private volatile boolean running = false;
 
     private TYPE debugMode = TYPE.NONE;
-
-    private OutputStream os = System.out;
 
     private Logger() {
     }
@@ -46,7 +45,7 @@ public class Logger implements Runnable {
     }
 
     /**
-     * Start the Logger,
+     * Start the Logger, only one logger Thread can exist
      *
      * @param debugMode debugMode of {@link TYPE}
      * @param os        {@link OutputStream} or null if {@link System#out} should be used
@@ -54,12 +53,47 @@ public class Logger implements Runnable {
     public synchronized void start(TYPE debugMode, @Nullable OutputStream os) {
         if (!running) {
             this.debugMode = debugMode;
-            if (os != null) {
-                this.os = os;
+            if (os == null) {
+                os = System.out;
             }
-            Thread t = new Thread(this, "Logger Thread");
-            t.start();
+            OutputStream finalOs = os;
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    while (running) {
+                        try {
+                            LogMessage log = logQueue.poll(100, TimeUnit.MILLISECONDS);
+                            if (log != null) {
+                                SimpleDateFormat formatter = new SimpleDateFormat("[H:mm:ss] ");
+                                Date date = new Date();
+                                StringBuilder output = new StringBuilder(formatter.format(date));
+                                switch (log.type) {
+                                    case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " should not exist!");
+                                    case INFO -> output.append("[INFO]: ");
+                                    case DEBUG -> output.append("[DEBUG]: ");
+                                    case WARNING -> output.append("[WARNING]: ");
+                                    case ERROR -> output.append("[ERROR]: ");
+                                }
+                                output.append(log.message);
+                                output.append(System.lineSeparator());
+                                finalOs.write(output.toString().getBytes(StandardCharsets.UTF_8));
+                            }
+                        } catch (InterruptedException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // cleanup
+                    try {
+                        finalOs.flush();
+                        finalOs.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            t.setName("Logger Thread");
             running = true;
+            t.start();
         } else {
             throw new IllegalStateException("Logger already Running");
         }
@@ -77,32 +111,7 @@ public class Logger implements Runnable {
     }
 
     @Override
-    public void run() {
-        while (running) {
-            try {
-                LogMessage log = logQueue.poll(100, TimeUnit.MILLISECONDS);
-                if (log != null) {
-                    SimpleDateFormat formatter = new SimpleDateFormat("[H:mm:ss] ");
-                    Date date = new Date();
-                    StringBuilder output = new StringBuilder(formatter.format(date));
-                    switch (log.type) {
-                        case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " should not exist!");
-                        case INFO -> output.append("[INFO]: ");
-                        case DEBUG -> output.append("[DEBUG]: ");
-                        case WARNING -> output.append("[WARNING]: ");
-                        case ERROR -> output.append("[ERROR]: ");
-                    }
-                    output.append(log.message);
-                    output.append(System.lineSeparator());
-                    os.write(output.toString().getBytes(StandardCharsets.UTF_8));
-                }
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void cleanup() {
+    public void close() {
         this.running = false;
     }
 
