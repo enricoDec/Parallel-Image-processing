@@ -29,7 +29,7 @@ public class GreyScaleTest {
         int repeat = 100;
         int threadPoolSize = Runtime.getRuntime().availableProcessors();
         boolean successful = false;
-        File csvFile = new File("src/main/resources/testMulticore.csv");
+        File csvFile = new File("src/main/resources/testMulticore2.csv");
         CSVFileWriter csvFileWriter = new CSVFileWriter(csvFile, CSV_HEADER);
         csvFileWriter.setSeparator(";");
 

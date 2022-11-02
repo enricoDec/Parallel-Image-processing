@@ -12,6 +12,13 @@ import java.util.Map;
 public class ImageUtils {
 
     public static int[][] imageToRgbArray(BufferedImage image) {
+        // TODO: try with image.getRGB(int startX,
+        //    int startY,
+        //    int w,
+        //    int h,
+        //    int[] rgbArray,
+        //    int offset,
+        //    int scansize) instead, maybe more performant.
         int width = image.getWidth();
         int height = image.getHeight();
         int[][] array = new int[width][height];

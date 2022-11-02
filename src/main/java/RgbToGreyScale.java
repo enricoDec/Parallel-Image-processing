@@ -31,6 +31,7 @@ public class RgbToGreyScale {
         // Read Image
         logger.log("Reading Image.", Logger.TYPE.INFO);
         long startTime = System.nanoTime();
+        ImageIO.setUseCache(true);
         BufferedImage image = ImageIO.read(file);
         int[][] imgRgbArray = ImageUtils.imageToRgbArray(image);
         // Make Tasks
