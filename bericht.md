@@ -2,10 +2,10 @@
 ## Grayscale, Histogramm und Helligkeit mit OpenMP
 ### von Enrico Gamil Toros de Chadarevian und Sonja Albers
 
-1. [Aufgabe](#1.-Aufgabe)
-2. [Aufbau](#2.-Aufbau)
-3. [Tests](#3.-Tests)
-4. [Schlussfolgerung](#4.-Schlussfolgerung)
+1. [Aufgabe](#1.-aufgabe)
+2. [Aufbau](#2.-aufbau)
+3. [Tests](#3.-tests)
+4. [Schlussfolgerung](#4.-schlussfolgerung)
 
 ## 1. Aufgabe
 
