@@ -39,7 +39,7 @@ public class ImageUtils {
     }
 
     /**
-     * Given a Map of RowId and Row RGB value set thr RGB for each Pixel of the given Image
+     * Given a Map of RowId and Row RGB value set the RGB for each Pixel of the given Image
      *
      * @param image   {@link BufferedImage}
      * @param results Map of RowId and Row RGB value

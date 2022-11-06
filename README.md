@@ -2,7 +2,7 @@
 
 ## Aufgabe
 
-Eine JPG oder PNG Datei, die in eine andere Datei konvertiert werden muss
+Eine JPG oder PNG Datei, die mit Hilfe von OpenMP in eine andere Datei konvertiert werden muss
 
 1. RGB -> Grayscale (Was mit PNG mit transparency)
 2. RGB -> Histogramm
