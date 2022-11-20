@@ -1,3 +1,6 @@
+import greyscale.RgbToGreyScale;
+import histogram.Histogram;
+import histogram.RgbToHistogram;
 import logger.Logger;
 
 import javax.imageio.ImageIO;
@@ -19,10 +22,25 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
         logger.start(Logger.TYPE.INFO, null);
-        File file = new File(ClassLoader.getSystemResource("images/original/animal/2.kitten_medium.jpg").getFile());
+        rgbToHistogram("images/original/human/3.harold_large.jpg", new File("src/main/resources/images/histogram/test"));
+        logger.close();
+    }
+
+    private static void rgbToHistogram(String resource, File outputImage) throws IOException, InterruptedException, TimeoutException {
+        // TODO: We could try to test if more efficient to have one result list and synchronize it or each thread with
+        //  own and merge it after. Also would be interesting to analyse what part really takes more time and if
+        //  overhead of creating all those threads is really worth and if so at what point (image size) it makes a difference
+        File file = new File(ClassLoader.getSystemResource(resource).getFile());
+        RgbToHistogram rgbToHistogram = new RgbToHistogram();
+        Histogram histogram = rgbToHistogram.rgbToHistogramSplittingRows(file, threadPoolSize);
+        histogram.showHistorgram();
+        // histogram.saveHistogram(outputImage);
+    }
+
+    private static void rgbToGreyScale(String resource, File outputImage) throws IOException, InterruptedException, TimeoutException {
+        File file = new File(ClassLoader.getSystemResource(resource).getFile());
         RgbToGreyScale rgbToGreyScale = new RgbToGreyScale();
         BufferedImage greyScale = rgbToGreyScale.rgbToGreyScaleSplittingRows(file, threadPoolSize);
-        ImageIO.write(greyScale, "png", new File("src/main/resources/images/greyscale/animal/2.kitten_medium.jpg"));
-        logger.close();
+        ImageIO.write(greyScale, "png", outputImage);
     }
 }

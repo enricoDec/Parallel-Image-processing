@@ -1,3 +1,5 @@
+package greyscale;
+
 import logger.Logger;
 import utils.ImageUtils;
 
