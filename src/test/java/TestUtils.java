@@ -12,6 +12,12 @@ import java.util.ArrayList;
  **/
 public class TestUtils {
 
+    public static long getNumberOrRows(File csvFile) throws IOException {
+        try (NamedCsvReader csv = NamedCsvReader.builder().fieldSeparator(';').build(csvFile.toPath())) {
+            return csv.stream().count();
+        }
+    }
+
     public static double getAverageOfCsvColumn(File csvFile, String columnName) throws IOException {
         return getAverageOfCsvColumn(csvFile, columnName, 0);
     }

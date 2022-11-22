@@ -18,12 +18,12 @@ public class RgbHistogramTest {
     // | TestId | Number of Threads | Successful | Elapsed Time for Calculation in Nano | Total Elapsed Time in Nano | Image |
     private static final String[] CSV_HEADER = new String[]{"TestId", "Number of Threads", "Successful", "Elapsed Time for Calculation in Nano", "Elapsed Total Time in Nano", "Image"};
 
-    private static final String TEST_ID = "0";
+    private static final String TEST_ID = "1";
 
     @Test
     public void greyScaleSingleThreadedTest() throws IOException, InterruptedException, TimeoutException {
         File image = new File(ClassLoader.getSystemResource("images/original/animal/2.kitten_medium.jpg").getFile());
-        String imageName = "2.kitten_medium.jpg";
+        String imageName = image.getName();
         int repeat = 100;
         int threadPoolSize = 1;
         boolean successful = false;
@@ -50,9 +50,11 @@ public class RgbHistogramTest {
             }
         }
         // TODO: Something is wrong here, the average is wrong
-        double avgCalc = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Time for Calculation in Nano");
-        System.out.printf("Average Calc time: %d ms%n", TimeUnit.NANOSECONDS.toMillis((long) avgCalc));
-        double avgTot = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Total Time in Nano");
-        System.out.printf("Average Total time: %d ms%n", TimeUnit.NANOSECONDS.toMillis((long) avgTot));
+        long datapoints = TestUtils.getNumberOrRows(csvFile);
+        double avgCalc = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Time for Calculation in Nano", repeat);
+        System.out.printf("Average Calc time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long) avgCalc), datapoints);
+        System.out.println(System.lineSeparator());
+        double avgTot = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Total Time in Nano", repeat);
+        System.out.printf("Average Total time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long) avgTot), datapoints);
     }
 }

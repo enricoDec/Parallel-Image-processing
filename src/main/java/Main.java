@@ -39,7 +39,7 @@ public class Main {
         File file = new File(ClassLoader.getSystemResource(resource).getFile());
         RgbToHistogram rgbToHistogram = new RgbToHistogram();
         Histogram histogram = rgbToHistogram.rgbToHistogramSplittingRows(file, threadPoolSize);
-        //histogram.showHistorgram();
+        histogram.showHistorgram();
         histogram.saveHistogram(outputImage);
     }
 
