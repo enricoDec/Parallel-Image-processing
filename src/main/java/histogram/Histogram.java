@@ -34,6 +34,8 @@ public class Histogram {
         if (chart == null) {
             plotHistogram();
         }
+        chart.getStyler().setToolTipsEnabled(false);
+        chart.getStyler().setZoomEnabled(false);
         BitmapEncoder.saveBitmapWithDPI(chart, outputImage.getAbsolutePath(), BitmapEncoder.BitmapFormat.PNG, 300);
     }
 

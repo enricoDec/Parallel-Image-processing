@@ -39,8 +39,8 @@ public class Main {
         File file = new File(ClassLoader.getSystemResource(resource).getFile());
         RgbToHistogram rgbToHistogram = new RgbToHistogram();
         Histogram histogram = rgbToHistogram.rgbToHistogramSplittingRows(file, threadPoolSize);
-        histogram.showHistorgram();
-        // histogram.saveHistogram(outputImage);
+        //histogram.showHistorgram();
+        histogram.saveHistogram(outputImage);
     }
 
     private static void rgbToGreyScale(String resource, File outputImage) throws IOException, InterruptedException, TimeoutException {
