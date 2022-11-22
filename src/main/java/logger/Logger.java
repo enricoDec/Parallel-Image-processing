@@ -57,40 +57,37 @@ public class Logger implements Closeable {
                 os = System.out;
             }
             OutputStream finalOs = os;
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    while (running) {
-                        try {
-                            LogMessage log = logQueue.poll(100, TimeUnit.MILLISECONDS);
-                            if (log != null) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("[H:mm:ss] ");
-                                Date date = new Date();
-                                StringBuilder output = new StringBuilder(formatter.format(date));
-                                switch (log.type) {
-                                    case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " should not exist!");
-                                    case INFO -> output.append("[INFO]: ");
-                                    case DEBUG -> output.append("[DEBUG]: ");
-                                    case WARNING -> output.append("[WARNING]: ");
-                                    case ERROR -> output.append("[ERROR]: ");
-                                }
-                                output.append(log.message);
-                                output.append(System.lineSeparator());
-                                finalOs.write(output.toString().getBytes(StandardCharsets.UTF_8));
-                            }
-                        } catch (InterruptedException | IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // cleanup
+            Thread t = new Thread(() -> {
+                while (running) {
                     try {
-                        finalOs.flush();
-                        finalOs.close();
-                    } catch (IOException e) {
+                        LogMessage log = logQueue.poll(100, TimeUnit.MILLISECONDS);
+                        if (log != null) {
+                            SimpleDateFormat formatter = new SimpleDateFormat("[H:mm:ss] ");
+                            Date date = new Date();
+                            StringBuilder output = new StringBuilder(formatter.format(date));
+                            switch (log.type) {
+                                case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " should not exist!");
+                                case INFO -> output.append("[INFO]: ");
+                                case DEBUG -> output.append("[DEBUG]: ");
+                                case WARNING -> output.append("[WARNING]: ");
+                                case ERROR -> output.append("[ERROR]: ");
+                            }
+                            output.append(log.message);
+                            output.append(System.lineSeparator());
+                            finalOs.write(output.toString().getBytes(StandardCharsets.UTF_8));
+                        }
+                    } catch (InterruptedException | IOException e) {
                         e.printStackTrace();
                     }
                 }
-            };
+                // cleanup
+                try {
+                    finalOs.flush();
+                    finalOs.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             t.setName("Logger Thread");
             running = true;
             t.start();

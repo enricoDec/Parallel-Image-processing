@@ -1,3 +1,4 @@
+import brightness.RgbBrightness;
 import greyscale.RgbToGreyScale;
 import histogram.Histogram;
 import histogram.RgbToHistogram;
@@ -22,7 +23,12 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
         logger.start(Logger.TYPE.INFO, null);
-        rgbToHistogram("images/original/human/3.harold_large.jpg", new File("src/main/resources/images/histogram/test"));
+        rgbToHistogram("images/original/human/3.harold_large.jpg",
+                new File("src/main/resources/images/histogram/test"));
+        rgbToGreyScale("images/original/human/3.harold_large.jpg",
+                new File("src/main/resources/images/greyscale/output.png"));
+        rgbBrightness("images/original/human/3.harold_large.jpg",
+                new File("src/main/resources/images/brightness/output.png"), 80);
         logger.close();
     }
 
@@ -42,5 +48,12 @@ public class Main {
         RgbToGreyScale rgbToGreyScale = new RgbToGreyScale();
         BufferedImage greyScale = rgbToGreyScale.rgbToGreyScaleSplittingRows(file, threadPoolSize);
         ImageIO.write(greyScale, "png", outputImage);
+    }
+
+    private static void rgbBrightness(String resource, File outputImage, int brightness) throws IOException, InterruptedException, TimeoutException {
+        File file = new File(ClassLoader.getSystemResource(resource).getFile());
+        RgbBrightness rgbBrightness = new RgbBrightness();
+        BufferedImage result = rgbBrightness.rgbBrightnessSplittingRows(file, brightness, threadPoolSize);
+        ImageIO.write(result, "png", outputImage);
     }
 }
