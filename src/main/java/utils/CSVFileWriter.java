@@ -2,6 +2,7 @@ package utils;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,8 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 02.11.22
  **/
@@ -124,11 +124,6 @@ public class CSVFileWriter {
     }
 
     private String escapeSpecialCharacters(String data) {
-        String escapeData = data.replaceAll("\\R", " ");
-        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
-            data.replace("\"", "\"\"");
-            escapeData = "\"" + data + "\"";
-        }
-        return escapeData;
+        return StringEscapeUtils.escapeCsv(data);
     }
 }

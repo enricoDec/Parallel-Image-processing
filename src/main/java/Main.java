@@ -1,8 +1,9 @@
-import brightness.RgbBrightness;
-import greyscale.RgbToGreyScale;
-import histogram.Histogram;
-import histogram.RgbToHistogram;
 import logger.Logger;
+import parallelImage.ParallelImageProcessor;
+import parallelImage.brightness.RgbBrightness;
+import parallelImage.greyscale.RgbToGreyScale;
+import parallelImage.histogram.Histogram;
+import parallelImage.histogram.RgbToHistogram;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,8 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 31.10.22
  **/
@@ -37,23 +37,22 @@ public class Main {
         //  own and merge it after. Also would be interesting to analyse what part really takes more time and if
         //  overhead of creating all those threads is really worth and if so at what point (image size) it makes a difference
         File file = new File(ClassLoader.getSystemResource(resource).getFile());
-        RgbToHistogram rgbToHistogram = new RgbToHistogram();
-        Histogram histogram = rgbToHistogram.rgbToHistogramSplittingRows(file, threadPoolSize);
-        histogram.showHistorgram();
+        ParallelImageProcessor processor = new RgbToHistogram(file, threadPoolSize);
+        Histogram histogram = processor.processImage();
         histogram.saveHistogram(outputImage);
     }
 
     private static void rgbToGreyScale(String resource, File outputImage) throws IOException, InterruptedException, TimeoutException {
         File file = new File(ClassLoader.getSystemResource(resource).getFile());
-        RgbToGreyScale rgbToGreyScale = new RgbToGreyScale();
-        BufferedImage greyScale = rgbToGreyScale.rgbToGreyScaleSplittingRows(file, threadPoolSize);
+        RgbToGreyScale processor = new RgbToGreyScale(file, threadPoolSize);
+        BufferedImage greyScale = processor.processImage();
         ImageIO.write(greyScale, "png", outputImage);
     }
 
     private static void rgbBrightness(String resource, File outputImage, int brightness) throws IOException, InterruptedException, TimeoutException {
         File file = new File(ClassLoader.getSystemResource(resource).getFile());
-        RgbBrightness rgbBrightness = new RgbBrightness();
-        BufferedImage result = rgbBrightness.rgbBrightnessSplittingRows(file, brightness, threadPoolSize);
+        RgbBrightness processor = new RgbBrightness(file, threadPoolSize, brightness);
+        BufferedImage result = processor.processImage();
         ImageIO.write(result, "png", outputImage);
     }
 }

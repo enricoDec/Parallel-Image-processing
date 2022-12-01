@@ -1,11 +1,10 @@
-package brightness;
+package parallelImage.brightness;
 
 import java.awt.*;
 import java.util.Map;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 22.11.22
  **/

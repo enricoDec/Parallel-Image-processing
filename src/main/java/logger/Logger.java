@@ -13,8 +13,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 01.11.22
  **/
@@ -32,8 +31,8 @@ public class Logger implements Closeable {
     }
 
     /**
-     * Per default logger just ignores every {@link #log(String, TYPE)} call since debugMode is set to NONE.
-     * To start the logger call {@link #start(TYPE, OutputStream)}
+     * Per default logger just ignores every {@link #log(String, TYPE)} call since debugMode is set to NONE. To start
+     * the logger call {@link #start(TYPE, OutputStream)}
      *
      * @return Instance of logger (Singleton)
      */
@@ -45,7 +44,7 @@ public class Logger implements Closeable {
     }
 
     /**
-     * Start the Logger, only one logger Thread can exist
+     * Start the Logger, only one logger Thread can exist.
      *
      * @param debugMode debugMode of {@link TYPE}
      * @param os        {@link OutputStream} or null if {@link System#out} should be used
@@ -97,7 +96,6 @@ public class Logger implements Closeable {
     }
 
     public void log(String message, TYPE type) {
-        // TODO: 01.11.22 Not sure if synchronized is needed here
         try {
             if (debugMode != TYPE.NONE) {
                 logQueue.put(new LogMessage(message, type));

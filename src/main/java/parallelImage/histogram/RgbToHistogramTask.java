@@ -1,12 +1,11 @@
-package histogram;
+package parallelImage.histogram;
 
 import logger.Logger;
 
 import java.awt.*;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 19.11.22
  **/

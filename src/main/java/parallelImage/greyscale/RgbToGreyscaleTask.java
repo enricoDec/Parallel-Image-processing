@@ -1,4 +1,4 @@
-package greyscale;
+package parallelImage.greyscale;
 
 import logger.Logger;
 
@@ -6,8 +6,7 @@ import java.awt.*;
 import java.util.Map;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 01.11.22
  **/
@@ -22,8 +21,8 @@ public class RgbToGreyscaleTask implements Runnable {
     private final int rowIndex;
 
     /**
-     * Task that takes a rgb Array of an image and calculates for the specified row the greyscale values.
-     * The result is put in the results Map which is synchronized
+     * Task that takes a rgb Array of an image and calculates for the specified row the greyscale values. The result is
+     * put in the results Map which is synchronized
      *
      * @param imgRgbArray image array as integer pixels in the default RGB color model and default sRGB colorspace.
      * @param results     reference of map where to put results

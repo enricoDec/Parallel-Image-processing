@@ -1,20 +1,20 @@
-package histogram;
+package parallelImage.histogram;
 
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import parallelImage.ProcessorResult;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 19.11.22
  **/
-public class Histogram {
+public class Histogram extends ProcessorResult {
 
     private final int[] redBucket;
 
@@ -39,7 +39,7 @@ public class Histogram {
         BitmapEncoder.saveBitmapWithDPI(chart, outputImage.getAbsolutePath(), BitmapEncoder.BitmapFormat.PNG, 300);
     }
 
-    public void showHistorgram() {
+    public void showHistogram() {
         if (chart == null) {
             plotHistogram();
         }

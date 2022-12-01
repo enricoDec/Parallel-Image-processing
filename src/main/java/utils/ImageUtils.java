@@ -1,24 +1,18 @@
 package utils;
 
+import jakarta.annotation.Nonnull;
+
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 01.11.22
  **/
 public class ImageUtils {
 
-    public static int[][] imageToRgbArray(BufferedImage image) {
-        // TODO: try with image.getRGB(int startX,
-        //    int startY,
-        //    int w,
-        //    int h,
-        //    int[] rgbArray,
-        //    int offset,
-        //    int scansize) instead, maybe more performant.
+    public static int[][] imageToRgbArray(@Nonnull BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
         int[][] array = new int[width][height];
@@ -45,7 +39,7 @@ public class ImageUtils {
      * @param results Map of RowId and Row RGB value
      * @return Resulting Image
      */
-    public static BufferedImage setRgbByRow(BufferedImage image, Map<Integer, int[]> results) {
+    public static BufferedImage setRgbByRow(@Nonnull BufferedImage image, Map<Integer, int[]> results) {
         for (int y = 0; y < image.getHeight(); y++) {
             int[] row = results.get(y);
             for (int x = 0; x < image.getWidth(); x++) {

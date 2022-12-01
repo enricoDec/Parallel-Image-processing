@@ -1,4 +1,3 @@
-import greyscale.RgbToGreyScale;
 import org.junit.Test;
 import utils.CSVFileWriter;
 
@@ -34,19 +33,19 @@ public class GreyScaleTest {
         CSVFileWriter csvFileWriter = new CSVFileWriter(csvFile, CSV_HEADER);
         csvFileWriter.setSeparator(";");
 
-        for (int i = 0; i < repeat; i++) {
-            RgbToGreyScale rgbToGreyScale = new RgbToGreyScale();
-            try {
-                BufferedImage greyScale = rgbToGreyScale.rgbToGreyScaleSplittingRows(image, threadPoolSize);
-                compareResultWithReference(ImageIO.read(image), resultReference, greyScale);
-                successful = true;
-            } finally {
-                csvFileWriter.addLine(new String[]{TEST_ID, String.valueOf(threadPoolSize),
-                        String.valueOf(successful), String.valueOf(rgbToGreyScale.getConversionTime()),
-                        String.valueOf(rgbToGreyScale.getTotalTime()), imageName});
-                csvFileWriter.writeCSV(true); // flush each time
-            }
-        }
+//        for (int i = 0; i < repeat; i++) {
+//            RgbToGreyScale rgbToGreyScale = new RgbToGreyScale();
+//            try {
+//                BufferedImage greyScale = rgbToGreyScale.rgbToGreyScaleSplittingRows(image, threadPoolSize);
+//                compareResultWithReference(ImageIO.read(image), resultReference, greyScale);
+//                successful = true;
+//            } finally {
+//                csvFileWriter.addLine(new String[]{TEST_ID, String.valueOf(threadPoolSize),
+//                        String.valueOf(successful), String.valueOf(rgbToGreyScale.getConversionTime()),
+//                        String.valueOf(rgbToGreyScale.getTotalTime()), imageName});
+//                csvFileWriter.writeCSV(true); // flush each time
+//            }
+//        }
     }
 
     private void compareResultWithReference(BufferedImage originalImage, BufferedImage expected, BufferedImage actual) {
