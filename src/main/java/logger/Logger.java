@@ -27,6 +27,8 @@ public class Logger implements Closeable {
 
     private TYPE debugMode = TYPE.NONE;
 
+    private Thread t;
+
     private Logger() {
     }
 
@@ -56,8 +58,8 @@ public class Logger implements Closeable {
                 os = System.out;
             }
             OutputStream finalOs = os;
-            Thread t = new Thread(() -> {
-                while (running) {
+            t = new Thread(() -> {
+                while (running || !logQueue.isEmpty()) {
                     try {
                         LogMessage log = logQueue.poll(100, TimeUnit.MILLISECONDS);
                         if (log != null) {
@@ -108,6 +110,11 @@ public class Logger implements Closeable {
     @Override
     public void close() {
         this.running = false;
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public enum TYPE {

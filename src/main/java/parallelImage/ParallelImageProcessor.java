@@ -1,6 +1,6 @@
 package parallelImage;
 
-import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import utils.ImageUtils;
 
 import javax.imageio.ImageIO;
@@ -16,17 +16,69 @@ import java.util.concurrent.TimeoutException;
  * @version : 1.0
  * @since : 30.11.22
  **/
-public abstract class ParallelImageProcessor {
+public abstract class ParallelImageProcessor implements ImageProcessor {
+
+
+    private int threadPoolSize;
 
     private File imageFile;
 
     private BufferedImage image;
 
-    private int threadPoolSize;
-
     private int[][] imgRgbArray;
 
-    public ParallelImageProcessor(@Nonnull File imageFile, int threadPoolSize) {
+    /**
+     * {@link ParallelImageProcessor} with a given image and threadPoolSize
+     *
+     * @param threadPoolSize max number of threads to be run parallel
+     */
+    public ParallelImageProcessor(int threadPoolSize) {
+        this.threadPoolSize = threadPoolSize;
+    }
+
+    /**
+     * {@link ParallelImageProcessor} that uses as many processors as available
+     */
+    public ParallelImageProcessor() {
+        this(Runtime.getRuntime().availableProcessors());
+    }
+
+    @Override
+    public ProcessorResult processImage(BufferedImage image) throws InterruptedException, TimeoutException {
+        readImageAsArray(image);
+        // Make and run Tasks
+        makeAndRunTask();
+        return retrieveResultFromTask();
+    }
+
+    @Override
+    public ProcessorResult processImage(File imageFile) throws IOException, InterruptedException, TimeoutException {
+        if (this.imageFile != null) {
+            resetProcessor();
+        }
+        checkImageFile(imageFile);
+        this.imageFile = imageFile;
+        // Read Image
+        readImage();
+        return processImage(image);
+    }
+
+    /**
+     * Reset for a new Run
+     */
+    protected void resetProcessor() {
+        this.imageFile = null;
+        this.image = null;
+        this.imgRgbArray = null;
+    }
+
+    /**
+     * Checks if the given image file is valid
+     *
+     * @param imageFile Image File to process
+     * @throws IllegalArgumentException if file does not exist or could not be read
+     */
+    protected void checkImageFile(File imageFile) throws IllegalArgumentException {
         String error = "";
         if (!imageFile.isFile()) {
             error = imageFile.getAbsolutePath() + " is not a File";
@@ -35,25 +87,6 @@ public abstract class ParallelImageProcessor {
         }
         if (!error.isBlank())
             throw new IllegalArgumentException(error);
-        this.imageFile = imageFile;
-        this.threadPoolSize = threadPoolSize;
-    }
-
-    /**
-     * Process the image.
-     *
-     * @return T extends {@link ProcessorResult}
-     * @throws IOException          I/O error
-     * @throws InterruptedException if interrupted while waiting
-     * @throws TimeoutException     if Threads did not finish in time
-     */
-    public <T> T processImage() throws IOException, InterruptedException, TimeoutException {
-        // Read Image
-        readImage();
-        readImageAsArray(image);
-        // Make and run Tasks
-        makeAndRunTask();
-        return retrieveResultFromTask();
     }
 
     /**
@@ -105,13 +138,14 @@ public abstract class ParallelImageProcessor {
     /**
      * Retrieve Result from Task(s)
      *
-     * @return {@link ProcessorResult}
+     * @return ProcessorResult
      */
-    protected abstract <T> T retrieveResultFromTask();
+    protected abstract ProcessorResult retrieveResultFromTask();
 
 
     /* ----------------------------- Getters & Setters ----------------------------- */
 
+    @Nullable
     public File getImageFile() {
         return imageFile;
     }
@@ -120,6 +154,7 @@ public abstract class ParallelImageProcessor {
         this.imageFile = imageFile;
     }
 
+    @Nullable
     public BufferedImage getImage() {
         return image;
     }

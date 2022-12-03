@@ -1,10 +1,9 @@
 package parallelImage.brightness;
 
 import parallelImage.ParallelImageProcessor;
+import parallelImage.ProcessorResult;
 import utils.ImageUtils;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,8 +21,8 @@ public class RgbBrightness extends ParallelImageProcessor {
 
     private Map<Integer, int[]> results;
 
-    public RgbBrightness(File imageFile, int threadPoolSize, int brightness) {
-        super(imageFile, threadPoolSize);
+    public RgbBrightness(int threadPoolSize, int brightness) {
+        super(threadPoolSize);
         this.brightness = brightness;
     }
 
@@ -38,7 +37,7 @@ public class RgbBrightness extends ParallelImageProcessor {
     }
 
     @Override
-    protected BufferedImage retrieveResultFromTask() {
-        return ImageUtils.setRgbByRow(getImage(), results);
+    protected ProcessorResult retrieveResultFromTask() {
+        return new ProcessorResult(ImageUtils.setRgbByRow(getImage(), results));
     }
 }

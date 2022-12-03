@@ -1,7 +1,5 @@
 package parallelImage.greyscale;
 
-import logger.Logger;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -11,8 +9,6 @@ import java.util.Map;
  * @since : 01.11.22
  **/
 public class RgbToGreyscaleTask implements Runnable {
-
-    private static final Logger logger = Logger.getInstance();
 
     private final int[][] imgRgbArray;
 
@@ -36,7 +32,6 @@ public class RgbToGreyscaleTask implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         int[] row = new int[imgRgbArray.length];
         for (int i = 0; i < row.length; i++) {
             // TODO: Could try variant with bit shift instead of getRed, getGreen...
@@ -50,6 +45,5 @@ public class RgbToGreyscaleTask implements Runnable {
         synchronized (results) {
             results.put(this.rowIndex, row);
         }
-        //logger.log(String.format("Thread %s Row[%d]", Thread.currentThread().getName(), rowID), Logger.TYPE.DEBUG);
     }
 }

@@ -35,9 +35,7 @@ public class RgbBrightnessTask implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         int[] row = new int[imgRgbArray.length];
-
         for (int i = 0; i < row.length; i++) {
             Color c = new Color(imgRgbArray[i][rowIndex]);
             row[i] = new Color(truncate(c.getRed() + brightness), truncate(c.getGreen() + brightness),

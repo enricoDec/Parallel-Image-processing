@@ -17,18 +17,30 @@ public interface Measurable {
     NanoTimeBuilder getImageReadTime();
 
     /**
-     * Gets the total execution time
+     * Gets the total execution time needed to process the image
      *
-     * @return the total execution time
+     * @return the total execution time for processing
      */
-    NanoTimeBuilder getTotalExecutionTime();
+    NanoTimeBuilder getTotalProcessingTime();
 
     /**
      * Gets the execution time for the task
      *
      * @return the execution time for the task
      */
-    NanoTimeBuilder getTaskTime();
+    NanoTimeBuilder getTasksTime();
+
+    /**
+     * Gets the execution time needed to retrieve the result from the task
+     *
+     * @return the execution time needed to retrieve the result
+     */
+    NanoTimeBuilder getRetrieveResultTime();
+
+    /**
+     * Log all the recorded execution times
+     */
+    void logExecutionTime();
 
 
     class NanoTimeBuilder {
@@ -44,7 +56,7 @@ public interface Measurable {
         }
 
         public long asMillis() {
-            return TimeUnit.NANOSECONDS.convert(timeInNano, TimeUnit.MILLISECONDS);
+            return TimeUnit.NANOSECONDS.toMillis(timeInNano);
         }
     }
 }

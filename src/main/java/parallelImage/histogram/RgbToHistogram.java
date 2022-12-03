@@ -1,8 +1,8 @@
 package parallelImage.histogram;
 
 import parallelImage.ParallelImageProcessor;
+import parallelImage.ProcessorResult;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,13 +26,12 @@ public class RgbToHistogram extends ParallelImageProcessor {
 
     LinkedList<int[]> blueBuckets;
 
-    public RgbToHistogram(File imageFile, int threadPoolSize) {
-        super(imageFile, threadPoolSize);
+    public RgbToHistogram(int threadPoolSize) {
+        super(threadPoolSize);
     }
 
     @Override
-    public ExecutorService makeTask() {
-        // TODO: could just pass the Task
+    protected ExecutorService makeTask() {
         redBuckets = new LinkedList<>();
         greenBuckets = new LinkedList<>();
         blueBuckets = new LinkedList<>();
@@ -40,9 +39,9 @@ public class RgbToHistogram extends ParallelImageProcessor {
     }
 
     @Override
-    protected Histogram retrieveResultFromTask() {
+    protected ProcessorResult retrieveResultFromTask() {
         mergeResults(redBuckets, greenBuckets, blueBuckets);
-        return new Histogram(resultRedBucket, resultGreenBucket, resultBlueBucket);
+        return new ProcessorResult(getImage(), new Histogram(resultRedBucket, resultGreenBucket, resultBlueBucket));
     }
 
     private ExecutorService makeTaskBySplittingRows(LinkedList<int[]> redBuckets, LinkedList<int[]> greenBuckets, LinkedList<int[]> blueBuckets) {

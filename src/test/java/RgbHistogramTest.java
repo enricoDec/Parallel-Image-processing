@@ -1,7 +1,8 @@
 import org.junit.Test;
 import parallelImage.MeasurableParallelImageProcessor;
+import parallelImage.ProcessorResult;
 import parallelImage.histogram.Histogram;
-import parallelImage.histogram.MeasurableRgbToHistogram;
+import parallelImage.histogram.RgbToHistogram;
 import utils.CSVFileWriter;
 
 import java.io.File;
@@ -33,9 +34,10 @@ public class RgbHistogramTest {
         csvFileWriter.setSeparator(";");
 
         for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor rgbToHistogram = new MeasurableRgbToHistogram(image, threadPoolSize);
+            MeasurableParallelImageProcessor rgbToHistogram = new MeasurableParallelImageProcessor(new RgbToHistogram(threadPoolSize));
             try {
-                Histogram histogram = (Histogram) rgbToHistogram.processImage();
+                ProcessorResult result = rgbToHistogram.processImage(image);
+                Histogram histogram = result.getHistogram();
                 if (histogram.getRedBucket() != null && histogram.getGreenBucket() != null && histogram.getBlueBucket() != null) {
                     successful = true;
                 }
@@ -44,8 +46,8 @@ public class RgbHistogramTest {
                         TEST_ID, //
                         String.valueOf(threadPoolSize), //
                         String.valueOf(successful),
-                        String.valueOf(rgbToHistogram.getTaskTime()), //
-                        String.valueOf(rgbToHistogram.getTotalExecutionTime()), //
+                        String.valueOf(rgbToHistogram.getTasksTime()), //
+                        String.valueOf(rgbToHistogram.getTotalProcessingTime()), //
                         imageName}); //
                 csvFileWriter.writeCSV(true); // flush each time
             }

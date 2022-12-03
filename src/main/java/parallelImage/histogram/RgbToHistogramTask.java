@@ -1,7 +1,5 @@
 package parallelImage.histogram;
 
-import logger.Logger;
-
 import java.awt.*;
 
 /**
@@ -10,8 +8,6 @@ import java.awt.*;
  * @since : 19.11.22
  **/
 public class RgbToHistogramTask implements Runnable {
-
-    private static final Logger logger = Logger.getInstance();
 
     private final int[][] imgRgbArray;
 
@@ -33,7 +29,6 @@ public class RgbToHistogramTask implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         for (int[] ints : imgRgbArray) {
             Color c = new Color(ints[rowIndex]);
             this.redBucket[c.getRed()]++;

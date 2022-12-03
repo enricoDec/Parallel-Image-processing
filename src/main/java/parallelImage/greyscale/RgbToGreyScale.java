@@ -1,10 +1,9 @@
 package parallelImage.greyscale;
 
 import parallelImage.ParallelImageProcessor;
+import parallelImage.ProcessorResult;
 import utils.ImageUtils;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,8 +19,8 @@ public class RgbToGreyScale extends ParallelImageProcessor {
 
     private Map<Integer, int[]> results;
 
-    public RgbToGreyScale(File imageFile, int threadPoolSize) {
-        super(imageFile, threadPoolSize);
+    public RgbToGreyScale(int threadPoolSize) {
+        super(threadPoolSize);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class RgbToGreyScale extends ParallelImageProcessor {
     }
 
     @Override
-    protected BufferedImage retrieveResultFromTask() {
-        return ImageUtils.setRgbByRow(getImage(), results);
+    protected ProcessorResult retrieveResultFromTask() {
+        return new ProcessorResult(ImageUtils.setRgbByRow(getImage(), results));
     }
 }

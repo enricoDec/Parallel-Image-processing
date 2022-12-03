@@ -3,7 +3,6 @@ package parallelImage.histogram;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import parallelImage.ProcessorResult;
 
 import java.awt.*;
 import java.io.File;
@@ -14,7 +13,7 @@ import java.io.IOException;
  * @version : 1.0
  * @since : 19.11.22
  **/
-public class Histogram extends ProcessorResult {
+public class Histogram {
 
     private final int[] redBucket;
 
@@ -30,15 +29,27 @@ public class Histogram extends ProcessorResult {
         this.blueBucket = blueBucket;
     }
 
+    /**
+     * Saves Histogram as Image.
+     *
+     * @param outputImage file where to save Image
+     * @throws IOException if an I/O error occurs.
+     */
     public void saveHistogram(File outputImage) throws IOException {
+        if (outputImage.isDirectory()) {
+            throw new IllegalArgumentException("outputImage has to be a File.");
+        }
         if (chart == null) {
             plotHistogram();
         }
         chart.getStyler().setToolTipsEnabled(false);
         chart.getStyler().setZoomEnabled(false);
-        BitmapEncoder.saveBitmapWithDPI(chart, outputImage.getAbsolutePath(), BitmapEncoder.BitmapFormat.PNG, 300);
+        BitmapEncoder.saveJPGWithQuality(chart, outputImage.getAbsolutePath(), 1); // 1 = high quality
     }
 
+    /**
+     * Show the Histogram on an Interface
+     */
     public void showHistogram() {
         if (chart == null) {
             plotHistogram();
