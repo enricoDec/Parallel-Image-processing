@@ -69,23 +69,6 @@ public interface Measurable {
         csvFileWriter.writeCSV(true); // flush each time
     }
 
-    class NanoTimeBuilder {
-
-        private final long timeInNano;
-
-        public NanoTimeBuilder(long timeInNano) {
-            this.timeInNano = timeInNano;
-        }
-
-        public long asNano() {
-            return timeInNano;
-        }
-
-        public long asMillis() {
-            return TimeUnit.NANOSECONDS.toMillis(timeInNano);
-        }
-    }
-
     enum CsvHeader {
         ID("ID"),
         THREAD_NUMBER("Number of Threads"),
@@ -103,6 +86,23 @@ public interface Measurable {
 
         CsvHeader(String value) {
             this.value = value;
+        }
+    }
+
+    class NanoTimeBuilder {
+
+        private final long timeInNano;
+
+        public NanoTimeBuilder(long timeInNano) {
+            this.timeInNano = timeInNano;
+        }
+
+        public long asNano() {
+            return timeInNano;
+        }
+
+        public long asMillis() {
+            return TimeUnit.NANOSECONDS.toMillis(timeInNano);
         }
     }
 }

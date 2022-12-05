@@ -1,7 +1,7 @@
 import logger.Logger;
 import parallelImage.MeasurableParallelImageProcessor;
 import parallelImage.ProcessorTaskType;
-import parallelImage.greyscale.GreyScaleProcessor;
+import parallelImage.histogram.HistogramProcessor;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,13 +21,13 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
         logger.start(Logger.TYPE.INFO, null);
-        File file = new File(ClassLoader.getSystemResource("images/original/nature/4.nature_mega.jpeg").getFile());
-        File outputFile = new File("src/main/resources/images/greyscale/nature/4.nature_mega2.jpeg");
+        File file = new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
+        File outputFile = new File("src/main/resources/images/brightness/human/3.harold_large.jpg");
         MeasurableParallelImageProcessor processor =
-                new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
-        BufferedImage image = processor.processImage(file, ProcessorTaskType.BLOCKING).getImage();
+                new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
+        BufferedImage image = processor.processImage(file, ProcessorTaskType.NON_BLOCKING).getImage();
         processor.logExecutionTime();
-        ImageIO.write(image, "jpeg", outputFile);
+        ImageIO.write(image, "jpg", outputFile);
         logger.close();
     }
 }
