@@ -67,7 +67,8 @@ public class Logger implements Closeable {
                             Date date = new Date();
                             StringBuilder output = new StringBuilder(formatter.format(date));
                             switch (log.type) {
-                                case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " should not exist!");
+                                case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " " +
+                                        "should not exist!");
                                 case INFO -> output.append("[INFO]: ");
                                 case DEBUG -> output.append("[DEBUG]: ");
                                 case WARNING -> output.append("[WARNING]: ");

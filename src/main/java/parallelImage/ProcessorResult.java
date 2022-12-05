@@ -2,7 +2,7 @@ package parallelImage;
 
 import jakarta.annotation.Nonnull;
 import parallelImage.histogram.Histogram;
-import parallelImage.histogram.RgbToHistogram;
+import parallelImage.histogram.HistogramProcessor;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeoutException;
@@ -29,15 +29,24 @@ public class ProcessorResult {
         this.histogram = histogram;
     }
 
-
+    /**
+     * Gets the processed Image
+     *
+     * @return processed Image as {@link BufferedImage}
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * Get the {@link Histogram} of the processed image
+     *
+     * @return {@link Histogram}
+     */
     public Histogram getHistogram() {
         // Lazy init as making histogram image costs
         if (histogram == null) {
-            ParallelImageProcessor processor = new RgbToHistogram(1);
+            ParallelImageProcessor processor = new HistogramProcessor(1);
             try {
                 ProcessorResult result = processor.processImage(image);
                 this.histogram = result.getHistogram();

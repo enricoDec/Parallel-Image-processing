@@ -1,4 +1,4 @@
-package parallelImage.histogram;
+package parallelImage.histogram.task;
 
 import java.awt.*;
 
@@ -7,9 +7,7 @@ import java.awt.*;
  * @version : 1.0
  * @since : 19.11.22
  **/
-public class RgbToHistogramTask implements Runnable {
-
-    private final int[][] imgRgbArray;
+public class HistogramNonBlockingTask extends HistogramTask implements Runnable {
 
     private final int[] redBucket;
 
@@ -17,24 +15,21 @@ public class RgbToHistogramTask implements Runnable {
 
     private final int[] blueBucket;
 
-    private final int rowIndex;
-
-    public RgbToHistogramTask(int[][] imgRgbArray, int[] redBucket, int[] greenBucket, int[] blueBucket, int rowIndex) {
-        this.imgRgbArray = imgRgbArray;
+    public HistogramNonBlockingTask(int[][] imgRgbArray, int rowIndex, int[] redBucket, int[] greenBucket,
+                                    int[] blueBucket) {
+        super(imgRgbArray, rowIndex);
         this.redBucket = redBucket;
         this.greenBucket = greenBucket;
         this.blueBucket = blueBucket;
-        this.rowIndex = rowIndex;
     }
 
     @Override
     public void run() {
-        for (int[] ints : imgRgbArray) {
-            Color c = new Color(ints[rowIndex]);
+        for (int[] rows : imgRgbArray) {
+            Color c = new Color(rows[rowIndex]);
             this.redBucket[c.getRed()]++;
             this.greenBucket[c.getGreen()]++;
             this.blueBucket[c.getBlue()]++;
-            // TODO: Alpha???
         }
     }
 }

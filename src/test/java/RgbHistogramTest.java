@@ -2,23 +2,21 @@ import org.junit.Test;
 import parallelImage.MeasurableParallelImageProcessor;
 import parallelImage.ProcessorResult;
 import parallelImage.histogram.Histogram;
-import parallelImage.histogram.RgbToHistogram;
+import parallelImage.histogram.HistogramProcessor;
 import utils.CSVFileWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @author : Enrico Gamil Toros
- * Project name : Parallel-Image-processing
+ * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
  * @since : 20.11.22
  **/
 public class RgbHistogramTest {
-    // | TestId | Number of Threads | Successful | Elapsed Time for Calculation in Nano | Total Elapsed Time in Nano | Image |
-    private static final String[] CSV_HEADER = new String[]{"TestId", "Number of Threads", "Successful", "Elapsed Time for Calculation in Nano", "Elapsed Total Time in Nano", "Image"};
+    private static final String[] CSV_HEADER = new String[]{"TestId", "Number of Threads", "Successful",
+            "Elapsed Time for Calculation in Nano", "Elapsed Total Time in Nano", "Image"};
 
     private static final String TEST_ID = "1";
 
@@ -34,7 +32,8 @@ public class RgbHistogramTest {
         csvFileWriter.setSeparator(";");
 
         for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor rgbToHistogram = new MeasurableParallelImageProcessor(new RgbToHistogram(threadPoolSize));
+            MeasurableParallelImageProcessor rgbToHistogram =
+                    new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
             try {
                 ProcessorResult result = rgbToHistogram.processImage(image);
                 Histogram histogram = result.getHistogram();
@@ -52,12 +51,13 @@ public class RgbHistogramTest {
                 csvFileWriter.writeCSV(true); // flush each time
             }
         }
-        // TODO: Something is wrong here, the average is wrong
-        long datapoints = TestUtils.getNumberOrRows(csvFile);
-        double avgCalc = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Time for Calculation in Nano", repeat);
-        System.out.printf("Average Calc time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long) avgCalc), datapoints);
-        System.out.println(System.lineSeparator());
-        double avgTot = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Total Time in Nano", repeat);
-        System.out.printf("Average Total time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long) avgTot), datapoints);
+//        long datapoints = TestUtils.getNumberOrRows(csvFile);
+//        double avgCalc = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Time for Calculation in Nano", repeat);
+//        System.out.printf("Average Calc time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long)
+//        avgCalc), datapoints);
+//        System.out.println(System.lineSeparator());
+//        double avgTot = TestUtils.getAverageOfCsvColumn(csvFile, "Elapsed Total Time in Nano", repeat);
+//        System.out.printf("Average Total time: %d ms from %d data-points.", TimeUnit.NANOSECONDS.toMillis((long)
+//        avgTot), datapoints);
     }
 }

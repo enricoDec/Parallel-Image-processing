@@ -1,5 +1,6 @@
 package parallelImage;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import utils.ImageUtils;
 
@@ -18,14 +19,16 @@ import java.util.concurrent.TimeoutException;
  **/
 public abstract class ParallelImageProcessor implements ImageProcessor {
 
-
+    @Nonnull
     private int threadPoolSize;
 
-    private File imageFile;
-
+    @Nonnull
     private BufferedImage image;
 
+    @Nonnull
     private int[][] imgRgbArray;
+
+    private int timeOutInMinutes = 5;
 
     /**
      * {@link ParallelImageProcessor} with a given image and threadPoolSize
@@ -44,32 +47,32 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
     }
 
     @Override
-    public ProcessorResult processImage(BufferedImage image) throws InterruptedException, TimeoutException {
+    public ProcessorResult processImage(BufferedImage image, ProcessorTaskType type) throws InterruptedException,
+            TimeoutException {
+        this.image = image;
         readImageAsArray(image);
         // Make and run Tasks
-        makeAndRunTask();
+        makeAndRunTask(type);
         return retrieveResultFromTask();
     }
 
     @Override
-    public ProcessorResult processImage(File imageFile) throws IOException, InterruptedException, TimeoutException {
-        if (this.imageFile != null) {
-            resetProcessor();
-        }
-        checkImageFile(imageFile);
-        this.imageFile = imageFile;
-        // Read Image
-        readImage();
-        return processImage(image);
+    public ProcessorResult processImage(BufferedImage image) throws InterruptedException, TimeoutException {
+        return processImage(image, ProcessorTaskType.BLOCKING);
     }
 
-    /**
-     * Reset for a new Run
-     */
-    protected void resetProcessor() {
-        this.imageFile = null;
-        this.image = null;
-        this.imgRgbArray = null;
+    @Override
+    public ProcessorResult processImage(File imageFile, ProcessorTaskType type) throws IOException,
+            InterruptedException, TimeoutException {
+        checkImageFile(imageFile);
+        // Read Image
+        readImage(imageFile);
+        return processImage(image, type);
+    }
+
+    @Override
+    public ProcessorResult processImage(File imageFile) throws IOException, InterruptedException, TimeoutException {
+        return processImage(imageFile, ProcessorTaskType.BLOCKING);
     }
 
     /**
@@ -92,10 +95,12 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
     /**
      * Reads image as {@link BufferedImage}
      *
+     * @param imageFile image file
      * @return the image as BufferedImage
      * @throws IOException I/O error
      */
-    protected BufferedImage readImage() throws IOException {
+    protected BufferedImage readImage(File imageFile) throws IOException {
+        ImageIO.setUseCache(false); // TODO: Set to true, this is only done for consistent test results
         this.image = ImageIO.read(imageFile);
         return image;
     }
@@ -115,21 +120,22 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
     /**
      * Make {@link ExecutorService} Task to be run
      *
+     * @param type {@link ProcessorTaskType}
      * @return {@link ExecutorService}
      */
-    protected abstract ExecutorService makeTask();
+    protected abstract ExecutorService makeTask(ProcessorTaskType type);
 
     /**
      * Makes and runs tasks
      *
+     * @param type {@link ProcessorTaskType}
      * @throws InterruptedException if interrupted while waiting
      * @throws TimeoutException     if Threads did not finish in time
      */
-    protected void makeAndRunTask() throws InterruptedException, TimeoutException {
-        ExecutorService executor = makeTask();
+    protected void makeAndRunTask(ProcessorTaskType type) throws InterruptedException, TimeoutException {
+        ExecutorService executor = makeTask(type);
         executor.shutdown();
-        // TODO: add custom timeout
-        boolean terminated = executor.awaitTermination(5, TimeUnit.MINUTES);
+        boolean terminated = executor.awaitTermination(timeOutInMinutes, TimeUnit.MINUTES);
         if (!terminated) {
             throw new TimeoutException("Threads did not finish before timeout");
         }
@@ -145,14 +151,6 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
 
     /* ----------------------------- Getters & Setters ----------------------------- */
 
-    @Nullable
-    public File getImageFile() {
-        return imageFile;
-    }
-
-    protected void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
-    }
 
     @Nullable
     public BufferedImage getImage() {
@@ -175,7 +173,7 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
         return imgRgbArray;
     }
 
-    protected void setImgRgbArray(int[][] imgRgbArray) {
-        this.imgRgbArray = imgRgbArray;
+    public void setTimeOutInMinutes(int timeOutInMinutes) {
+        this.timeOutInMinutes = timeOutInMinutes;
     }
 }

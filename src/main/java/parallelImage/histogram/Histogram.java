@@ -15,12 +15,11 @@ import java.io.IOException;
  **/
 public class Histogram {
 
+    private final static int DEFAULT_WIDTH = 1080;
+    private final static int DEFAULT_HEIGHT = 720;
     private final int[] redBucket;
-
     private final int[] greenBucket;
-
     private final int[] blueBucket;
-
     private XYChart chart = null;
 
     public Histogram(int[] redBucket, int[] greenBucket, int[] blueBucket) {
@@ -29,18 +28,26 @@ public class Histogram {
         this.blueBucket = blueBucket;
     }
 
+    public Histogram() {
+        this.redBucket = new int[256];
+        this.greenBucket = new int[256];
+        this.blueBucket = new int[256];
+    }
+
     /**
      * Saves Histogram as Image.
      *
      * @param outputImage file where to save Image
+     * @param width       image width
+     * @param height      image height
      * @throws IOException if an I/O error occurs.
      */
-    public void saveHistogram(File outputImage) throws IOException {
+    public void saveHistogram(File outputImage, int width, int height) throws IOException {
         if (outputImage.isDirectory()) {
             throw new IllegalArgumentException("outputImage has to be a File.");
         }
         if (chart == null) {
-            plotHistogram();
+            plotHistogram(width, height);
         }
         chart.getStyler().setToolTipsEnabled(false);
         chart.getStyler().setZoomEnabled(false);
@@ -48,18 +55,39 @@ public class Histogram {
     }
 
     /**
-     * Show the Histogram on an Interface
+     * Saves Histogram as Image with a default resolution of 1080x720.
+     *
+     * @param outputImage file where to save Image
+     * @throws IOException if an I/O error occurs.
+     */
+    public void saveHistogram(File outputImage) throws IOException {
+        saveHistogram(outputImage, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    /**
+     * Shows the Histogram on an Interface with a default resolution of 1080x720.
      */
     public void showHistogram() {
+        showHistogram(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    /**
+     * Shows the Histogram on an Interface with a specified resolution.
+     *
+     * @param width  interface width
+     * @param height interface height
+     */
+    public void showHistogram(int width, int height) {
         if (chart == null) {
-            plotHistogram();
+            plotHistogram(width, height);
         }
         new SwingWrapper(chart).displayChart();
     }
 
-    private void plotHistogram() {
+    private void plotHistogram(int width, int height) {
         // Create Chart
-        this.chart = new XYChartBuilder().width(1600).height(900).title("Histogram").xAxisTitle("Value").yAxisTitle("Count").build();
+        this.chart = new XYChartBuilder().width(width).height(height).title("Histogram").xAxisTitle("Value").yAxisTitle(
+                "Count").build();
         // Customize Chart
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);

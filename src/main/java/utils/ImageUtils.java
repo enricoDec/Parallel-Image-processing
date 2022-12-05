@@ -48,4 +48,17 @@ public class ImageUtils {
         }
         return image;
     }
+
+    /**
+     * Given a row of rgb Pixels as int[] set the pixels in the image.
+     *
+     * @param image    {@link BufferedImage} to be changed
+     * @param rowIndex index of the row (y) to be changed
+     * @param row      int[] rgb array
+     */
+    public static void setRgbRow(@Nonnull BufferedImage image, int rowIndex, int[] row) {
+        for (int x = 0; x < image.getWidth(); x++) {
+            image.setRGB(x, rowIndex, row[x]);
+        }
+    }
 }

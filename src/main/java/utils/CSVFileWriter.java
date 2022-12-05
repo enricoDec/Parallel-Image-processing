@@ -23,7 +23,7 @@ public class CSVFileWriter {
 
     private final List<String[]> data = new ArrayList<>();
 
-    private final File csvOutFile;
+    private final File csvFile;
 
     private final int numberOfRows;
 
@@ -31,14 +31,14 @@ public class CSVFileWriter {
 
     private String separator = ",";
 
-    public CSVFileWriter(File csvOutFile, int numberOfRows) {
-        this.csvOutFile = csvOutFile;
+    public CSVFileWriter(File csvFile, int numberOfRows) {
+        this.csvFile = csvFile;
         assert numberOfRows > 0 : "Am I a Joke to You?";
         this.numberOfRows = numberOfRows;
     }
 
-    public CSVFileWriter(File csvOutFile, String[] header) {
-        this(csvOutFile, header.length);
+    public CSVFileWriter(File csvFile, String[] header) {
+        this(csvFile, header.length);
         this.header = header;
     }
 
@@ -69,10 +69,10 @@ public class CSVFileWriter {
         if (separator != null) {
             this.separator = separator;
         }
-        if (header != null && !csvOutFile.exists()) {
+        if (header != null && !csvFile.exists()) {
             data.add(0, header);
         }
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(csvOutFile, true), true,
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(csvFile, true), true,
                 StandardCharsets.UTF_8)) {
             data.stream() //
                     .map(this::convertToCSV) //
@@ -82,7 +82,7 @@ public class CSVFileWriter {
         if (clearData) {
             data.clear();
         }
-        return csvOutFile;
+        return csvFile;
     }
 
     /**
@@ -109,8 +109,8 @@ public class CSVFileWriter {
         return writeCSV(null, clearData);
     }
 
-    public File getCsvOutFile() {
-        return csvOutFile;
+    public File getCsvFile() {
+        return csvFile;
     }
 
     public void setSeparator(String separator) {
@@ -125,5 +125,9 @@ public class CSVFileWriter {
 
     private String escapeSpecialCharacters(String data) {
         return StringEscapeUtils.escapeCsv(data);
+    }
+
+    public int getNumberOfRows() {
+        return numberOfRows;
     }
 }

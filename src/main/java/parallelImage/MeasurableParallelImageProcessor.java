@@ -29,23 +29,17 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
     }
 
     @Override
-    public ProcessorResult processImage(File imageFile) throws IOException, InterruptedException, TimeoutException {
+    public ProcessorResult processImage(BufferedImage image, ProcessorTaskType type) throws InterruptedException,
+            TimeoutException {
         logger.log("Processing image", Logger.TYPE.INFO);
-        resetProcessor();
-        // Check Image file
-        processor.checkImageFile(imageFile);
-        processor.setImageFile(imageFile);
+        resetProcessor(); // Failsafe to make sure execution times are reset
         long startTime = System.nanoTime();
-        // Read Image
-        readImage();
-        ProcessorResult result = processImage(getImage());
+        ProcessorResult result = super.processImage(image, type);
         this.totalProcessingTime = System.nanoTime() - startTime;
         return result;
     }
 
-    @Override
-    protected void resetProcessor() {
-        super.resetProcessor();
+    private void resetProcessor() {
         this.imageReadTime = 0;
         this.tasksTime = 0;
         this.retrieveResultTime = 0;
@@ -53,10 +47,10 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
     }
 
     @Override
-    protected BufferedImage readImage() throws IOException {
+    protected BufferedImage readImage(File imageFile) throws IOException {
         logger.log("Reading Image.", Logger.TYPE.INFO);
         long startTime = System.nanoTime();
-        BufferedImage image = processor.readImage();
+        BufferedImage image = processor.readImage(imageFile);
         this.imageReadTime = System.nanoTime() - startTime;
         return image;
     }
@@ -65,22 +59,23 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
     protected int[][] readImageAsArray(BufferedImage image) {
         logger.log("Converting Image to array.", Logger.TYPE.INFO);
         long startTime = System.nanoTime();
-        int[][] rgbArray = processor.readImageAsArray(image);
+        int[][] rgbArray = processor.readImageAsArray(processor.getImage());
         this.imageReadTime += System.nanoTime() - startTime;
         return rgbArray;
     }
 
     @Override
-    protected ExecutorService makeTask() {
-        return processor.makeTask();
+    protected ExecutorService makeTask(ProcessorTaskType type) {
+        return processor.makeTask(type);
     }
 
     @Override
-    protected void makeAndRunTask() throws InterruptedException, TimeoutException {
-        logger.log("Started " + processor.getImage().getHeight() + " Tasks with " + processor.getThreadPoolSize() + " Threads.",
+    protected void makeAndRunTask(ProcessorTaskType type) throws InterruptedException, TimeoutException {
+        logger.log("Started " + processor.getImage().getHeight() + " Tasks with " + processor.getThreadPoolSize() +
+                        " Threads.",
                 Logger.TYPE.INFO);
         long startTime = System.nanoTime();
-        processor.makeAndRunTask();
+        processor.makeAndRunTask(type);
         this.tasksTime = System.nanoTime() - startTime;
         logger.log("All Threads done.", Logger.TYPE.INFO);
     }
@@ -92,6 +87,17 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
         ProcessorResult result = processor.retrieveResultFromTask();
         this.retrieveResultTime = System.nanoTime() - startTime;
         return result;
+    }
+
+    @Override
+    public void logExecutionTime() {
+        logger.log("Execution time:", Logger.TYPE.INFO);
+        logger.log("It took " + getImageReadTime().asMillis() + "ms to read the image file", Logger.TYPE.INFO);
+        logger.log("It took " + getTasksTime().asMillis() + "ms to execute all tasks", Logger.TYPE.INFO);
+        logger.log("It took " + getRetrieveResultTime().asMillis() + "ms to retrieve the result from all tasks",
+                Logger.TYPE.INFO);
+        logger.log("It took a total of " + getTotalProcessingTime().asMillis() + "ms to process the image",
+                Logger.TYPE.INFO);
     }
 
     /* ----------------------------- Getters & Setters ----------------------------- */
@@ -129,12 +135,12 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
     }
 
     @Override
-    public void logExecutionTime() {
-        logger.log("Execution time:", Logger.TYPE.INFO);
-        logger.log("It took " + getImageReadTime().asMillis() + "ms to read the image file", Logger.TYPE.INFO);
-        logger.log("It took " + getTasksTime().asMillis() + "ms to execute all tasks", Logger.TYPE.INFO);
-        logger.log("It took " + getRetrieveResultTime().asMillis() + "ms to retrieve the result from all tasks", Logger.TYPE.INFO);
-        logger.log("It took a total of " + getTotalProcessingTime().asMillis() + "ms to process the image",
-                Logger.TYPE.INFO);
+    public BufferedImage getImage() {
+        return processor.getImage();
+    }
+
+    @Override
+    public int getThreadPoolSize() {
+        return processor.getThreadPoolSize();
     }
 }
