@@ -20,7 +20,8 @@ public interface Measurable {
     NanoTimeBuilder getImageReadTime();
 
     /**
-     * Gets the total execution time needed to process the image
+     * Gets the total execution time needed to process the image.
+     * So Reading image + Task execution + Retrieve result
      *
      * @return the total execution time for processing
      */
