@@ -28,6 +28,7 @@ public class GreyscaleTest {
     private final File image =
             new File(ClassLoader.getSystemResource("images/original/nature/4.nature_mega.jpeg").getFile());
     private final int repeat = 1000;
+    private final int threadPoolSize = 8;
 
     @Before
     public void init() {
@@ -40,14 +41,13 @@ public class GreyscaleTest {
     }
 
     @Test
-    public void greyscaleNonBlockingAllThreadsTest() throws IOException, InterruptedException, TimeoutException {
+    public void greyscaleNonBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
                 ".nature_mega.jpeg"));
         String imageName = image.getName();
-        int threadPoolSize = Runtime.getRuntime().availableProcessors();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "nonBlocking8Thread.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleNonBlocking.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
@@ -65,64 +65,13 @@ public class GreyscaleTest {
     }
 
     @Test
-    public void greyscaleNonBlockingSingleThreadTest() throws IOException, InterruptedException, TimeoutException {
+    public void greyscaleBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
                 ".nature_mega.jpeg"));
         String imageName = image.getName();
-        int threadPoolSize = 1;
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "nonBlocking1Thread.csv"));
-        for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor processor =
-                    new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
-            try {
-                BufferedImage greyScale = processor.processImage(image, ProcessorTaskType.NON_BLOCKING).getImage();
-                File file = Files.createTempFile(null, ".jpeg").toFile();
-                ImageIO.write(greyScale, "jpeg", file);
-                TestUtils.compareImages(originalReference, resultReference, ImageIO.read(file));
-                successful = true;
-            } finally {
-                processor.logResult(csvWriter, TEST_ID, threadPoolSize, imageName, successful);
-            }
-        }
-        TestUtils.calculateAvgResults(csvWriter, null);
-    }
-
-    @Test
-    public void greyscaleBlockingAllThreadsTest() throws IOException, InterruptedException, TimeoutException {
-        BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
-                ".nature_mega.jpeg"));
-        String imageName = image.getName();
-        int threadPoolSize = Runtime.getRuntime().availableProcessors();
-        boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "blocking1Thread.csv"));
-        for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor processor =
-                    new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
-            try {
-                BufferedImage greyScale = processor.processImage(image, ProcessorTaskType.BLOCKING).getImage();
-                File file = Files.createTempFile(null, ".jpeg").toFile();
-                ImageIO.write(greyScale, "jpeg", file);
-                TestUtils.compareImages(originalReference, resultReference, ImageIO.read(file));
-                successful = true;
-            } finally {
-                processor.logResult(csvWriter, TEST_ID, threadPoolSize, imageName, successful);
-            }
-        }
-        TestUtils.calculateAvgResults(csvWriter, null);
-    }
-
-    @Test
-    public void greyscaleBlockingSingleThreadTest() throws IOException, InterruptedException, TimeoutException {
-        BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
-                ".nature_mega.jpeg"));
-        String imageName = image.getName();
-        int threadPoolSize = 1;
-        boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "blocking8Thread.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleBlocking.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));

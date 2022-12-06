@@ -16,7 +16,7 @@ import java.util.concurrent.TimeoutException;
  **/
 public class Main {
     private static final Logger logger = Logger.getInstance();
-    private static final int threadPoolSize = Runtime.getRuntime().availableProcessors();
+    private static final int threadPoolSize = 1;
 
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
@@ -25,7 +25,7 @@ public class Main {
         File outputFile = new File("src/main/resources/images/brightness/human/3.harold_large.jpg");
         MeasurableParallelImageProcessor processor =
                 new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
-        BufferedImage image = processor.processImage(file, ProcessorTaskType.NON_BLOCKING).getImage();
+        BufferedImage image = processor.processImage(file, ProcessorTaskType.BLOCKING).getImage();
         processor.logExecutionTime();
         ImageIO.write(image, "jpg", outputFile);
         logger.close();

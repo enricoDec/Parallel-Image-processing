@@ -29,6 +29,7 @@ public class BrightnessTest {
             new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
     private final int repeat = 1000;
     private final int brightness = 60;
+    private final int threadPoolSize = 1;
 
     @Before
     public void init() {
@@ -41,14 +42,13 @@ public class BrightnessTest {
     }
 
     @Test
-    public void brightnessNonBlockingAllThreadsTest() throws IOException, InterruptedException, TimeoutException {
+    public void brightnessNonBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
                 ".harold_large.jpg"));
         String imageName = image.getName();
-        int threadPoolSize = Runtime.getRuntime().availableProcessors();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "nonBlocking8Thread.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessNonBlocking.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));
@@ -66,64 +66,13 @@ public class BrightnessTest {
     }
 
     @Test
-    public void greyScaleNonBlockingSingleThreadTest() throws IOException, InterruptedException, TimeoutException {
+    public void greyScaleBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
                 ".harold_large.jpg"));
         String imageName = image.getName();
-        int threadPoolSize = 1;
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "nonBlocking1Thread.csv"));
-        for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor processor =
-                    new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));
-            try {
-                BufferedImage brightness = processor.processImage(image, ProcessorTaskType.NON_BLOCKING).getImage();
-                File file = Files.createTempFile(null, ".jpeg").toFile();
-                ImageIO.write(brightness, "jpeg", file);
-                TestUtils.compareImages(originalReference, resultReference, ImageIO.read(file));
-                successful = true;
-            } finally {
-                processor.logResult(csvWriter, TEST_ID, threadPoolSize, imageName, successful);
-            }
-        }
-        TestUtils.calculateAvgResults(csvWriter, null);
-    }
-
-    @Test
-    public void greyScaleBlockingAllThreadsTest() throws IOException, InterruptedException, TimeoutException {
-        BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
-                ".harold_large.jpg"));
-        String imageName = image.getName();
-        int threadPoolSize = Runtime.getRuntime().availableProcessors();
-        boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "blocking1Thread.csv"));
-        for (int i = 0; i < repeat; i++) {
-            MeasurableParallelImageProcessor processor =
-                    new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));
-            try {
-                BufferedImage brightness = processor.processImage(image, ProcessorTaskType.BLOCKING).getImage();
-                File file = Files.createTempFile(null, ".jpeg").toFile();
-                ImageIO.write(brightness, "jpeg", file);
-                TestUtils.compareImages(originalReference, resultReference, ImageIO.read(file));
-                successful = true;
-            } finally {
-                processor.logResult(csvWriter, TEST_ID, threadPoolSize, imageName, successful);
-            }
-        }
-        TestUtils.calculateAvgResults(csvWriter, null);
-    }
-
-    @Test
-    public void greyScaleBlockingSingleThreadTest() throws IOException, InterruptedException, TimeoutException {
-        BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
-                ".harold_large.jpg"));
-        String imageName = image.getName();
-        int threadPoolSize = 1;
-        boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "blocking8Thread.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessBlocking.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));

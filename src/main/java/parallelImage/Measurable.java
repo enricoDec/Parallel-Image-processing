@@ -64,8 +64,8 @@ public interface Measurable {
                 String.valueOf(getTasksTime().asMillis()), // task time
                 String.valueOf(getRetrieveResultTime().asMillis()), // retrieve result time
                 String.valueOf(getTotalProcessingTime().asMillis()), // total execution time
-                String.valueOf(successful), // check if reference is equal
-                imageName}); // image name
+                imageName, // image name
+                String.valueOf(successful)}); // check if reference is equal
         csvFileWriter.writeCSV(true); // flush each time
     }
 
