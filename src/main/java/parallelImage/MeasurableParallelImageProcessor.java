@@ -34,7 +34,6 @@ public class MeasurableParallelImageProcessor extends ParallelImageProcessor imp
         logger.log("Processing image", Logger.TYPE.INFO);
         resetProcessor(); // Failsafe to make sure execution times are reset
         long startTime = System.nanoTime();
-        this.processor.setImage(image);
         ProcessorResult result = super.processImage(image, type);
         this.totalProcessingTime = System.nanoTime() - startTime;
         return result;

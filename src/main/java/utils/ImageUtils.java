@@ -30,6 +30,14 @@ public class ImageUtils {
         return array;
     }
 
+    public static int[] imageToRgbArrayOptionTwo(@Nonnull BufferedImage image) {
+        // TODO: This is way faster then other option
+        int width = image.getWidth();
+        int height = image.getHeight();
+        return image.getRGB(0, 0, width, height, null, 0, width);
+    }
+
+
     public static int[] getImageRow(int[][] imgArray, int rowNumber) {
         int[] row = new int[imgArray.length];
         for (int i = 0; i < row.length; i++) {

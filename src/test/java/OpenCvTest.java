@@ -10,7 +10,9 @@ import parallelImage.greyscale.GreyScaleProcessor;
 import utils.ImageUtils;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author : Enrico Gamil Toros
@@ -61,6 +63,7 @@ public class OpenCvTest {
     public void ownGreyscaleTest() {
         try {
             Logger.getInstance().start(Logger.TYPE.INFO, null);
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new GreyScaleProcessor(2));
             processor.processImage(ImageUtils.mat2BufferedImage(Imgcodecs.imread(file.getAbsolutePath()), ".jpeg"),
@@ -74,7 +77,11 @@ public class OpenCvTest {
 
 
     @Test
-    public void histogramTest() {
-
+    public void histogramTest() throws IOException {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        BufferedImage image = ImageUtils.mat2BufferedImage(Imgcodecs.imread(file.getAbsolutePath()), ".jpeg");
+        long startTime = System.currentTimeMillis();
+        ImageUtils.imageToRgbArray(image);
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }

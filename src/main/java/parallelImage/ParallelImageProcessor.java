@@ -66,7 +66,7 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
             InterruptedException, TimeoutException {
         checkImageFile(imageFile);
         // Read Image
-        readImage(imageFile);
+        this.image = readImage(imageFile);
         return processImage(image, type);
     }
 
