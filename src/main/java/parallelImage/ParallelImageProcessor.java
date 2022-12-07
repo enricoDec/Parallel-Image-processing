@@ -113,6 +113,7 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
      * @return image as int[x][y]
      */
     protected int[][] readImageAsArray(BufferedImage image) {
+        // TODO: Getting the RGB value in the thread would be more performant
         this.imgRgbArray = ImageUtils.imageToRgbArray(image);
         return imgRgbArray;
     }

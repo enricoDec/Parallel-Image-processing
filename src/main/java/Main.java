@@ -1,12 +1,14 @@
 import logger.Logger;
-import parallelImage.MeasurableParallelImageProcessor;
+import parallelImage.ParallelImageProcessor;
 import parallelImage.ProcessorTaskType;
-import parallelImage.histogram.HistogramProcessor;
+import parallelImage.greyscale.GreyScaleProcessor;
+import parallelImage.greyscale.MultithreadingGreyscaleConverter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -16,18 +18,23 @@ import java.util.concurrent.TimeoutException;
  **/
 public class Main {
     private static final Logger logger = Logger.getInstance();
-    private static final int threadPoolSize = 1;
+    private static final int threadPoolSize = Runtime.getRuntime().availableProcessors();
 
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
-        logger.start(Logger.TYPE.INFO, null);
+        ImageIO.setUseCache(false);
         File file = new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
-        File outputFile = new File("src/main/resources/images/brightness/human/3.harold_large.jpg");
-        MeasurableParallelImageProcessor processor =
-                new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
-        BufferedImage image = processor.processImage(file, ProcessorTaskType.BLOCKING).getImage();
-        processor.logExecutionTime();
-        ImageIO.write(image, "jpg", outputFile);
-        logger.close();
+
+        long startTime = System.nanoTime();
+        BufferedImage image = MultithreadingGreyscaleConverter.convertToGreyscale(file);
+        long endTime = System.nanoTime();
+        System.out.println("Runtime for algo1: " + TimeUnit.NANOSECONDS.toMillis(endTime - startTime) + "ms");
+
+        startTime = System.nanoTime();
+        ParallelImageProcessor processor = new GreyScaleProcessor(threadPoolSize);
+        image = processor.processImage(file, ProcessorTaskType.NON_BLOCKING).getImage();
+        endTime = System.nanoTime();
+        System.out.println("Runtime for algo2: " + TimeUnit.NANOSECONDS.toMillis(endTime - startTime) + "ms");
+
     }
 }

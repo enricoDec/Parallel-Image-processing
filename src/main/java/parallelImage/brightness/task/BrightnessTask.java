@@ -1,7 +1,5 @@
 package parallelImage.brightness.task;
 
-import java.awt.*;
-
 /**
  * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
  * @version : 1.0
@@ -21,20 +19,22 @@ public abstract class BrightnessTask {
         this.brightness = brightness;
     }
 
-    protected static int truncate(int value) {
-        if (value < 0) {
-            return 0;
-        } else {
-            return Math.min(value, 255);
-        }
-    }
-
     protected int[] brightnessTask(int[][] imgRgbArray, int rowIndex, int brightness) {
         int[] row = new int[imgRgbArray.length];
         for (int i = 0; i < row.length; i++) {
-            Color c = new Color(imgRgbArray[i][rowIndex]);
-            row[i] = new Color(truncate(c.getRed() + brightness), truncate(c.getGreen() + brightness),
-                    truncate(c.getBlue() + brightness)).getRGB();
+            int pixel = imgRgbArray[i][rowIndex];
+            int red = (pixel >> 16) & 0xFF;
+            int green = (pixel >> 8) & 0xFF;
+            int blue = (pixel) & 0xFF;
+            // increase brightness
+            red *= brightness;
+            green *= brightness;
+            blue *= brightness;
+            // truncate
+            red = Math.min(Math.max(red, 0), 255);
+            green = Math.min(Math.max(green, 0), 255);
+            blue = Math.min(Math.max(blue, 0), 255);
+            row[i] = (red << 16) | (green << 8) | blue;
         }
         return row;
     }

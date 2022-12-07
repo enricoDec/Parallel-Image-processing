@@ -31,11 +31,11 @@ public abstract class GreyscaleTask {
             int red = (pixel >> 16) & 0xFF;
             int green = (pixel >> 8) & 0xFF;
             int blue = (pixel) & 0xFF;
-            int rgbRes2 = (int) (red * 0.21 + green * 0.72 + blue * 0.07);
+            int rgbRes = (int) (red * 0.21 + green * 0.72 + blue * 0.07);
             row[i] = ((0xFF) << 24) | // alpha not needed
-                    ((rgbRes2 & 0xFF) << 16) |
-                    ((rgbRes2 & 0xFF) << 8) |
-                    ((rgbRes2 & 0xFF) << 0);
+                    ((rgbRes & 0xFF) << 16) |
+                    ((rgbRes & 0xFF) << 8) |
+                    ((rgbRes & 0xFF));
         }
         return row;
     }
