@@ -7,6 +7,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author : Enrico Gamil Toros Project name : Parallel-Image-processing
@@ -51,7 +52,7 @@ public class Histogram {
         }
         chart.getStyler().setToolTipsEnabled(false);
         chart.getStyler().setZoomEnabled(false);
-        BitmapEncoder.saveJPGWithQuality(chart, outputImage.getAbsolutePath(), 1); // 1 = high quality
+        BitmapEncoder.saveBitmapWithDPI(chart, outputImage.getAbsolutePath(), BitmapEncoder.BitmapFormat.PNG, 300);
     }
 
     /**
@@ -100,6 +101,10 @@ public class Histogram {
         for (int i = 0; i < 256; i++) {
             value[i] = i;
         }
+        // Normalize Arrays
+        normalizeArray(redBucket, 0, 255);
+        normalizeArray(greenBucket, 0, 255);
+        normalizeArray(blueBucket, 0, 255);
         // Red
         XYSeries red = chart.addSeries("Red", value, getRedBucket());
         red.setFillColor(new Color(255, 0, 0, 100));
@@ -118,6 +123,12 @@ public class Histogram {
         blue.setMarker(SeriesMarkers.NONE);
         blue.setLineColor(Color.BLUE);
         blue.setSmooth(true);
+    }
+
+    private void normalizeArray(int[] array, int newMin, int newMax) {
+        int minValue = Arrays.stream(array).min().getAsInt();
+        int maxValue = Arrays.stream(array).max().getAsInt();
+        Arrays.setAll(array, i -> (array[i] - minValue) * (newMax - newMin) / (maxValue - minValue) + newMin);
     }
 
     public int[] getRedBucket() {

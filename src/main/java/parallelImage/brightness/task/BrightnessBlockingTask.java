@@ -13,7 +13,7 @@ public class BrightnessBlockingTask extends BrightnessTask implements Runnable {
 
     private final BufferedImage image;
 
-    public BrightnessBlockingTask(int[][] imgRgbArray, int rowIndex, int brightness, BufferedImage image) {
+    public BrightnessBlockingTask(int[][] imgRgbArray, int rowIndex, double brightness, BufferedImage image) {
         super(imgRgbArray, rowIndex, brightness);
         this.image = image;
     }

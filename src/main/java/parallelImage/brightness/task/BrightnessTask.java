@@ -11,15 +11,15 @@ public abstract class BrightnessTask {
 
     protected final int rowIndex;
 
-    protected final int brightness;
+    protected final double brightness;
 
-    public BrightnessTask(int[][] imgRgbArray, int rowIndex, int brightness) {
+    public BrightnessTask(int[][] imgRgbArray, int rowIndex, double brightness) {
         this.imgRgbArray = imgRgbArray;
         this.rowIndex = rowIndex;
         this.brightness = brightness;
     }
 
-    protected int[] brightnessTask(int[][] imgRgbArray, int rowIndex, int brightness) {
+    protected int[] brightnessTask(int[][] imgRgbArray, int rowIndex, double brightness) {
         int[] row = new int[imgRgbArray.length];
         for (int i = 0; i < row.length; i++) {
             int pixel = imgRgbArray[i][rowIndex];

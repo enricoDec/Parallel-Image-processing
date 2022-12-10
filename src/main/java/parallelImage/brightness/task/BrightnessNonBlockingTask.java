@@ -11,7 +11,8 @@ public class BrightnessNonBlockingTask extends BrightnessTask implements Runnabl
 
     private final Map<Integer, int[]> results;
 
-    public BrightnessNonBlockingTask(int[][] imgRgbArray, int rowIndex, int brightness, Map<Integer, int[]> results) {
+    public BrightnessNonBlockingTask(int[][] imgRgbArray, int rowIndex, double brightness,
+                                     Map<Integer, int[]> results) {
         super(imgRgbArray, rowIndex, brightness);
         this.results = results;
     }

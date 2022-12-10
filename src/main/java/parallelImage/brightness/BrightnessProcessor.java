@@ -20,13 +20,13 @@ import java.util.concurrent.Executors;
  **/
 public class BrightnessProcessor extends ParallelImageProcessor {
 
-    private final int brightness;
+    private final double brightness;
 
     private Map<Integer, int[]> results;
 
     private ProcessorTaskType type;
 
-    public BrightnessProcessor(int threadPoolSize, int brightness) {
+    public BrightnessProcessor(int threadPoolSize, double brightness) {
         super(threadPoolSize);
         this.brightness = brightness;
     }
