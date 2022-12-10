@@ -28,7 +28,7 @@ public abstract class ParallelImageProcessor implements ImageProcessor {
     @Nonnull
     private int[][] imgRgbArray;
 
-    private int timeOutInMinutes = 5;
+    private int timeOutInMinutes = Integer.MAX_VALUE;
 
     /**
      * {@link ParallelImageProcessor} with a given image and threadPoolSize
