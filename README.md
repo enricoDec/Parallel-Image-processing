@@ -5,7 +5,8 @@
 2. [Changing Image Brightness](#changing-image-brightness)
 3. [Creating Image RGB Histogram](#creating-image-rgb-histogram)
 4. [Project](#project)
-5. [Logger](#logger)
+5. [Benchmarks](#benchmarks)
+6. [Logger](#logger)
 
 # Converting an Image to Greyscale
 
