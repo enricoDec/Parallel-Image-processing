@@ -77,9 +77,9 @@ The Blocking variant uses shared-memory to write directly the result (synchroniz
 <img width="600" align="center" src="src/main/resources/images/UML.png" alt="Class UML"/>
 
 # Benchmarks
-Processor: 1,4 GHz Quad-Core Intel Core i5
-Memory: 8 GB 2133 MHz LPDDR3
-OS: macOS Ventura Version 13.0.1 (22A400)
+Processor: 1,4 GHz Quad-Core Intel Core i5  
+Memory: 8 GB 2133 MHz LPDDR3  
+OS: macOS Ventura Version 13.0.1 (22A400)  
 
 For each Task and Variant the Task was executed 1000 times and the execution time was recorded. The benchmark results can be seen under
 `/src/main/resources/testResults`, they include the raw results as csv and some graphics. The Tests can be found under `/src/test/java`.
