@@ -17,11 +17,18 @@ import java.util.Arrays;
 public class Histogram {
 
     private final static int DEFAULT_WIDTH = 1080;
+
     private final static int DEFAULT_HEIGHT = 720;
+
     private final int[] redBucket;
+
     private final int[] greenBucket;
+
     private final int[] blueBucket;
+
     private XYChart chart = null;
+
+    private boolean doNormalizeBuckets = true;
 
     public Histogram(int[] redBucket, int[] greenBucket, int[] blueBucket) {
         this.redBucket = redBucket;
@@ -87,8 +94,9 @@ public class Histogram {
 
     private void plotHistogram(int width, int height) {
         // Create Chart
-        this.chart = new XYChartBuilder().width(width).height(height).title("Histogram").xAxisTitle("Value").yAxisTitle(
-                "Count").build();
+        this.chart =
+                new XYChartBuilder().width(width).height(height).title("RGB Histogram").xAxisTitle("Value").yAxisTitle(
+                        "Count").build();
         // Customize Chart
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
@@ -102,9 +110,8 @@ public class Histogram {
             value[i] = i;
         }
         // Normalize Arrays
-        normalizeArray(redBucket, 0, 255);
-        normalizeArray(greenBucket, 0, 255);
-        normalizeArray(blueBucket, 0, 255);
+        if (doNormalizeBuckets)
+            normalizeBuckets();
         // Red
         XYSeries red = chart.addSeries("Red", value, getRedBucket());
         red.setFillColor(new Color(255, 0, 0, 100));
@@ -125,6 +132,12 @@ public class Histogram {
         blue.setSmooth(true);
     }
 
+    private void normalizeBuckets() {
+        normalizeArray(redBucket, 0, 255);
+        normalizeArray(greenBucket, 0, 255);
+        normalizeArray(blueBucket, 0, 255);
+    }
+
     private void normalizeArray(int[] array, int newMin, int newMax) {
         int minValue = Arrays.stream(array).min().getAsInt();
         int maxValue = Arrays.stream(array).max().getAsInt();
@@ -141,5 +154,14 @@ public class Histogram {
 
     public int[] getBlueBucket() {
         return blueBucket;
+    }
+
+    /**
+     * True by default
+     *
+     * @param doNormalizeBuckets true if buckets should be normalized else false
+     */
+    public void doNormalizeBuckets(boolean doNormalizeBuckets) {
+        this.doNormalizeBuckets = doNormalizeBuckets;
     }
 }
