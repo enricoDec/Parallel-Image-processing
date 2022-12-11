@@ -5,7 +5,8 @@
 2. [Changing Image Brightness](#changing-image-brightness)
 3. [Creating Image RGB Histogram](#creating-image-rgb-histogram)
 4. [Project](#project)
-5. [Logger](#logger)
+5. [Benchmarks](#benchmarks)
+6. [Logger](#logger)
 
 # Converting an Image to Greyscale
 
@@ -24,9 +25,9 @@ ParallelImageProcessor processor = new GreyScaleProcessor(2);
 BufferedImage image = processor.processImage(file).getImage();
 ```
 
-| <img width="600" src="src/main/resources/images/original/animal/2.kitten_medium.jpg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/greyscale/kitten.png" alt="Original Image in Greyscale"/>  |
-|:-:|:-:|
-| **Original Image**  | **Original Image in Greyscale** |
+| <img width="600" src="src/main/resources/images/original/animal/2.kitten_medium.jpg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/greyscale/kitten.png" alt="Original Image in Greyscale"/> |
+| :---------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
+|                                             **Original Image**                                              |                                      **Original Image in Greyscale**                                      |
 
 # Changing Image Brightness
 
@@ -38,9 +39,9 @@ ProcessorResult result = processor.processImage(file);
 BufferedImage image = result.getImage();
 ```
 
-| <img width="600" src="src/main/resources/images/original/animal/2.kitten_medium.jpg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/brightness/kitten.png" alt="Original Image with increased brightness"/>  |
-|:-:|:-:|
-| **Original Image**  | **Original Image with increased brightness** |
+| <img width="600" src="src/main/resources/images/original/animal/2.kitten_medium.jpg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/brightness/kitten.png" alt="Original Image with increased brightness"/> |
+| :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: |
+|                                             **Original Image**                                              |                                      **Original Image with increased brightness**                                       |
 
 # Creating Image RGB Histogram
 
@@ -53,9 +54,9 @@ Histogram histogram = result.getHistogram();
 histogram.saveHistogram(outputFile);
 ```
 
-| <img width="600" src="src/main/resources/images/original/nature/2.nature_medium.jpeg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/histogram/nature.png" alt="RGB Histogram of Original Image"/>  |
-|:-:|:-:|
-| **Original Image**  | **RGB Histogram of Original Image** |
+| <img width="600" src="src/main/resources/images/original/nature/2.nature_medium.jpeg" alt="Original Image"/> | <img width="600" src="src/main/resources/images/histogram/nature.png" alt="RGB Histogram of Original Image"/> |
+| :----------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
+|                                              **Original Image**                                              |                                      **RGB Histogram of Original Image**                                      |
 
 The Histogram can also be shown in an interactive Interface:
 
@@ -75,6 +76,31 @@ The Blocking variant uses shared-memory to write directly the result (synchroniz
 ### Class UML
 <img width="600" align="center" src="src/main/resources/images/UML.png" alt="Class UML"/>
 
+# Benchmarks
+Processor: 1,4 GHz Quad-Core Intel Core i5  
+Memory: 8 GB 2133 MHz LPDDR3  
+OS: macOS Ventura Version 13.0.1 (22A400)  
+
+For each Task and Variant the Task was executed 1000 times and the execution time was recorded. The benchmark results can be seen under
+`/src/main/resources/testResults`, they include the raw results as csv and some graphics. The Tests can be found under `/src/test/java`.
+
+## Greyscale
+|                                              **Blocking**                                               |                                                **Non-Blocking**                                                |
+| :-----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------: |
+| <img width="600" src="/src/main/resources/testResults/greyscale/Diagram_Blockin_2.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/greyscale/Diagram_NonBlockin_2.png" alt="Non-Blocking"/> |
+| <img width="600" src="/src/main/resources/testResults/greyscale/Diagram_Blockin_3.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/greyscale/Diagram_NonBlockin_3.png" alt="Non-Blocking"/> |
+
+## Brightness
+|                                               **Blocking**                                               |                                                **Non-Blocking**                                                 |
+| :------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
+| <img width="600" src="/src/main/resources/testResults/brightness/Diagram_Blockin_2.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/brightness/Diagram_NonBlockin_2.png" alt="Non-Blocking"/> |
+| <img width="600" src="/src/main/resources/testResults/brightness/Diagram_Blockin_3.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/brightness/Diagram_NonBlockin_3.png" alt="Non-Blocking"/> |
+
+## Histogram
+|                                              **Blocking**                                               |                                                **Non-Blocking**                                                 |
+| :-----------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
+| <img width="600" src="/src/main/resources/testResults/histogram/Diagram_Blockin_2.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/histogram/Diagram_NonBlockin_2.png" alt="Non-Blocking"/>  |
+| <img width="600" src="/src/main/resources/testResults/histogram/Diagram_Blockin_3.png" alt="Blocking"/> | <img width="600" src="/src/main/resources/testResults/histogram/Diagram_NonBlockin_3.png" alt="Non-Blocking"/> |
 
 # Logger
 ```java
