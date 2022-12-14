@@ -1,14 +1,7 @@
 package utils;
 
 import jakarta.annotation.Nonnull;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -74,20 +67,5 @@ public class ImageUtils {
         for (int x = 0; x < image.getWidth(); x++) {
             image.setRGB(x, rowIndex, row[x]);
         }
-    }
-
-    /**
-     * Convert {@link Mat} to BufferedImage, reads images faster.
-     *
-     * @param matrix matrix
-     * @param ext    image extension (should include .)
-     * @return {@link BufferedImage}
-     * @throws IOException if an error occurs during reading or when not able to create required ImageInputStream.
-     */
-    public static BufferedImage mat2BufferedImage(Mat matrix, String ext) throws IOException {
-        MatOfByte mob = new MatOfByte();
-        Imgcodecs.imencode(ext, matrix, mob);
-        byte[] ba = mob.toArray();
-        return ImageIO.read(new ByteArrayInputStream(ba));
     }
 }
