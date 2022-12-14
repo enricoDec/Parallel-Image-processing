@@ -11,28 +11,25 @@
 
 ## 1. Aufgabe
 
-Das Ziel der Aufgabe ist es, PNG- oder JPG-Dateien aus dem RGB-Format in drei andere Ausgabeformate umzuwandeln:
+Das Ziel der Aufgabe ist es, mit Hilfe von Parallelisierung Informationen aus PNG- oder JPG-Dateien herauszulesen und folgendes zu erstellen:
 
 1. ein Grauwertbild
 2. ein Histogramm
 3. ein Bild mit veränderter Helligkeit
 
-Dabei sollen die Performance-Unterschiede zwischen den Umwandlungen mit und ohne die Nutzung von OpenMP verglichen
-werden. Zusätzlich kann die Parallelisierung mit Hilfe von Threads in den Vergleich einbezogen werden.
+Der Hauptfokus liegt dabei auf der Umsetzung der Parallelisierung der Aufgaben, nicht auf den Algorithmen selbst. Es wurden zwei verschiedene Varianten der Parallelisierung genutzt, wobei beide sich den Speicher mit den Ausgangspixelwerten teilen. Das Auslesen ist demnach nicht synchronisiert.
 
-*Fun Fact: SW-Bilder haben nur 1 Bit Farbtiefe, Grauwertbilder hingegen 8 Bit.*
+### Variante 1: Blocking
+Hier werden die neuen Pixelwerte in Threads berechnet und die veränderten Werte sofort in einer neuen Bilddatei gespeichert. Um Race-Conditions zu vermeiden, sind die Abläufe so synchronisiert, dass die Threads zwar parallel rechnen können, aber nur einer schreiben kann. 
 
-## 2. Aufbau
+### Variante 2: Non-Blocking
+In dieser Variante werden die neuen Pixelwerte ebenfalls in eigenen Threads berechnet, allerdings werden sie vorerst in einem eigenen Cache des Threads gespeichert. Erst wenn alle Threads ihre Berechnungen beendet haben, werden die Ergebnisse gesammelt und daraus eine neue Bilddatei erstellt.
 
-- Jede Aufgabe 2 Varianten:
-    - Variante 1 (Blocking): die neuen Werte der Pixel werden in einem Thread gerechnet und direkt im Bild Modell
-      geändert. Der Bild Modell wird dafür Synchronisiert (Semaphor) um Race Conditions zu vermeiden. Das heisst jedes
-      Thread can Parallel die neuen Werte berechnen aber nicht parallel schreiben.
-    - Variante 2 (Non Blocking): die neuen Werte der Pixel werden in einem Thread gerechnet und in einem eigenen
-      Speicher (Thread spezifisch) gespeichert. Nachdem alle Threads beendet wurden, werden alle ergebnisse gesammelt
-      und erst dann im Bild Modell geändert
-    - Alle Varianten teilen sich einem gemeinsamen Speicher, welches die "Originale" Pixel Werte besitzt (zum Lesen also
-      nicht Synchronisiert).
+## 2. Aufbau und Funktionsweise
+
+- Übersicht der Klassen und Beschreibung der Zusammenhänge – Klassendiagramm
+
+Jeweils: beschreiben, wie die Werte berechnet werden
 
 ### 2.1 Grauwertbild
 
@@ -52,10 +49,10 @@ werden. Zusätzlich kann die Parallelisierung mit Hilfe von Threads in den Vergl
   hoffentlich damit sich zeigen lassen, dass more Threads -> mo better.
 - Varianten vergleichen (Blocking vs Non Blocking)
 - Bild Auflösung macht unterschied?
--
 
 ## 4. Schlussfolgerung
 
 - circa 50% der laufzeit ist Bild aus Disk lesen -> eigenliche bottleneck. Solche kleine aufgaben auf Threads zu
   verteilen macht kaum unterschied. Man sollte an dieser Stelle eigentlich optimieren man könnte Beispielsweise die Bild
   Datei on demand in fragmente auslesen.
+TODO: Selbst laufen lassen
