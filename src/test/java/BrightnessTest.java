@@ -66,7 +66,7 @@ public class BrightnessTest {
     }
 
     @Test
-    public void greyScaleBlockingTest() throws IOException, InterruptedException, TimeoutException {
+    public void brightnessBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
                 ".harold_large.jpg"));
