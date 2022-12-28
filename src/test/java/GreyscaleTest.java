@@ -26,7 +26,7 @@ public class GreyscaleTest {
     private static final Logger logger = Logger.getInstance();
     private final File csvFile = new File("src/main/resources/testResults/greyscale");
     private final File image =
-            new File(ClassLoader.getSystemResource("images/original/nature/4.nature_mega.jpeg").getFile());
+            new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
     private final int repeat = 1000;
     private final int threadPoolSize = 8;
 
@@ -43,11 +43,10 @@ public class GreyscaleTest {
     @Test
     public void greyscaleNonBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
-                ".nature_mega.jpeg"));
+        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/human/3.harold_large_non_blocking.jpg"));
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleNonBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleNonBlocking_intel_mac_" + threadPoolSize + "_threads.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
@@ -67,11 +66,10 @@ public class GreyscaleTest {
     @Test
     public void greyscaleBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
-        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/nature/4" +
-                ".nature_mega.jpeg"));
+        BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/greyscale/human/3.harold_large_blocking.jpg"));
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "greyscaleBlocking_intel_mac_" + threadPoolSize + "_threads.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));

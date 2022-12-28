@@ -45,10 +45,10 @@ public class BrightnessTest {
     public void brightnessNonBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
-                ".harold_large.jpg"));
+                ".harold_large_non_blocking.jpg"));
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessNonBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessNonBlocking_intel_mac_" + threadPoolSize + "_threads.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));
@@ -66,13 +66,13 @@ public class BrightnessTest {
     }
 
     @Test
-    public void greyScaleBlockingTest() throws IOException, InterruptedException, TimeoutException {
+    public void brightnessBlockingTest() throws IOException, InterruptedException, TimeoutException {
         BufferedImage originalReference = ImageIO.read(image);
         BufferedImage resultReference = ImageIO.read(ClassLoader.getSystemResource("images/brightness/human/3" +
-                ".harold_large.jpg"));
+                ".harold_large_blocking.jpg"));
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "brightnessBlocking_intel_mac_" + threadPoolSize + "_threads.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, brightness));

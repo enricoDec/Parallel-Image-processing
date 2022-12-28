@@ -24,7 +24,7 @@ public class HistogramTest {
     private static final Logger logger = Logger.getInstance();
     private final File csvFile = new File("src/main/resources/testResults/histogram");
     private final File image =
-            new File(ClassLoader.getSystemResource("images/original/nature/4.nature_mega.jpeg").getFile());
+            new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
     private final int repeat = 1000;
     private final int threadPoolSize = 8;
 
@@ -42,7 +42,7 @@ public class HistogramTest {
     public void histogramNonBlockingTest() throws IOException, InterruptedException, TimeoutException {
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "histogramNonBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "histogramNonBlocking_intel_mac_" + threadPoolSize + "_threads.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
@@ -60,7 +60,7 @@ public class HistogramTest {
     public void histogramBlockingTest() throws IOException, InterruptedException, TimeoutException {
         String imageName = image.getName();
         boolean successful = false;
-        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "histogramBlocking.csv"));
+        CSVFileWriter csvWriter = TestUtils.makeCsvWriter(new File(csvFile, "histogramBlocking_intel_mac_" + threadPoolSize + "_threads.csv.csv"));
         for (int i = 0; i < repeat; i++) {
             MeasurableParallelImageProcessor processor =
                     new MeasurableParallelImageProcessor(new HistogramProcessor(threadPoolSize));
