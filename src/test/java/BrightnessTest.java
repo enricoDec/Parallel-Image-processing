@@ -29,7 +29,7 @@ public class BrightnessTest {
             new File(ClassLoader.getSystemResource("images/original/human/3.harold_large.jpg").getFile());
     private final int repeat = 1000;
     private final int brightness = 60;
-    private final int threadPoolSize = 8;
+    private final int threadPoolSize = 1;
 
     @Before
     public void init() {
