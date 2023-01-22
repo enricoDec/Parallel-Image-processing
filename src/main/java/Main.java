@@ -1,10 +1,10 @@
 import logger.Logger;
 import parallelImage.MeasurableParallelImageProcessor;
-import parallelImage.ParallelImageProcessor;
 import parallelImage.ProcessorResult;
-import parallelImage.greyscale.GreyScaleProcessor;
+import parallelImage.ProcessorTaskType;
+import parallelImage.brightness.BrightnessProcessor;
 
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -20,13 +20,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
         // Init Logger
-        ParallelImageProcessor processor = new GreyScaleProcessor(threadPoolSize);
-        ProcessorResult result = processor.processImage(new File(""));
-        BufferedImage image = result.getImage();
-
-
-        MeasurableParallelImageProcessor measurableProcessor =
-                new MeasurableParallelImageProcessor(new GreyScaleProcessor(threadPoolSize));
-
+        logger.start(null);
+        MeasurableParallelImageProcessor processor =
+                new MeasurableParallelImageProcessor(new BrightnessProcessor(threadPoolSize, 60));
+        ProcessorResult result = processor.processImage(new File("src/main/resources/images/original/nature/4" +
+                ".nature_mega.jpeg"), ProcessorTaskType.NON_BLOCKING);
+        ImageIO.write(result.getImage(), "jpeg", new File("src/main/resources/testResults/brightness/nonBlocking/4" +
+                ".nature_mega_new.jpeg"));
+        processor.logExecutionTime();
+        logger.close();
     }
 }

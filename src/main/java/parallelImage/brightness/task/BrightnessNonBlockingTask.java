@@ -20,8 +20,6 @@ public class BrightnessNonBlockingTask extends BrightnessTask implements Runnabl
     @Override
     public void run() {
         int[] row = brightnessTask(imgRgbArray, rowIndex, brightness);
-        synchronized (results) {
-            results.put(this.rowIndex, row);
-        }
+        results.put(this.rowIndex, row);
     }
 }

@@ -25,8 +25,6 @@ public class Logger implements Closeable {
 
     private volatile boolean running = false;
 
-    private TYPE debugMode = TYPE.NONE;
-
     private Thread t;
 
     private Logger() {
@@ -34,7 +32,7 @@ public class Logger implements Closeable {
 
     /**
      * Per default logger just ignores every {@link #log(String, TYPE)} call since debugMode is set to NONE. To start
-     * the logger call {@link #start(TYPE, OutputStream)}
+     * the logger call {@link #start(OutputStream)}
      *
      * @return Instance of logger (Singleton)
      */
@@ -48,12 +46,10 @@ public class Logger implements Closeable {
     /**
      * Start the Logger, only one logger Thread can exist.
      *
-     * @param debugMode debugMode of {@link TYPE}
-     * @param os        {@link OutputStream} or null if {@link System#out} should be used
+     * @param os {@link OutputStream} or null if {@link System#out} should be used
      */
-    public synchronized void start(TYPE debugMode, @Nullable OutputStream os) {
+    public synchronized void start(@Nullable OutputStream os) {
         if (!running) {
-            this.debugMode = debugMode;
             if (os == null) {
                 os = System.out;
             }
@@ -67,8 +63,6 @@ public class Logger implements Closeable {
                             Date date = new Date();
                             StringBuilder output = new StringBuilder(formatter.format(date));
                             switch (log.type) {
-                                case NONE -> throw new IllegalStateException("Message of Type " + TYPE.NONE + " " +
-                                        "should not exist!");
                                 case INFO -> output.append("[INFO]: ");
                                 case DEBUG -> output.append("[DEBUG]: ");
                                 case WARNING -> output.append("[WARNING]: ");
@@ -100,8 +94,8 @@ public class Logger implements Closeable {
 
     public void log(String message, TYPE type) {
         try {
-            if (debugMode != TYPE.NONE) {
-                logQueue.put(new LogMessage(message, type));
+            if (!message.isBlank()) {
+                logQueue.put(new LogMessage(message.trim(), type));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -119,7 +113,6 @@ public class Logger implements Closeable {
     }
 
     public enum TYPE {
-        NONE, // no output
         INFO,
         DEBUG,
         WARNING,
