@@ -116,6 +116,9 @@ public class ConsoleApp {
                     }
                     config.setThreadPoolSize(threadPoolSize);
                 }
+                default -> {
+                    printError("Illegal argument option");
+                }
             }
         }
         return config;

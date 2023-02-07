@@ -27,8 +27,6 @@ public class GreyscaleNonBlockingTask extends GreyscaleTask implements Runnable 
     @Override
     public void run() {
         int[] row = greyscaleTask();
-        synchronized (results) {
-            results.put(this.rowIndex, row);
-        }
+        results.put(this.rowIndex, row);
     }
 }
