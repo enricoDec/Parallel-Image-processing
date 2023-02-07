@@ -1,5 +1,9 @@
 # Parallel-Image-processing
 
+# Abgabe
+[Bericht](Bericht.pdf)   
+[Pres Folien](Algo_Aufgabe_04_Präsentation.pdf)
+
 # ToC
 1. [Converting an Image to Greyscale](#converting-an-image-to-greyscale)
 2. [Changing Image Brightness](#changing-image-brightness)
