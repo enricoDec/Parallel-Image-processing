@@ -1,6 +1,14 @@
 # Parallel-Image-processing
+The aim of this project is to convert PNG or JPG files from the RGB format into three other output formats using parallelization:
+1. A grayscale image
+2. A histogram
+3. An image with altered brightness
 
-# Abgabe
+Originally, the project was intended to compare the performance differences between these conversions with and without the use of OpenMP. However, after consultation with Professor Dr. Nikita Kovalenko, it was agreed to solve the task using the Java internal Runnable interface. The complete implementation can be found on GitHub.
+
+Two variants, a Blocking and a Non-Blocking version, were utilized for the implementation, and both will be compared later. The image file is read from shared memory, which is a thread-safe approach, eliminating the need for additional synchronization. Each thread processes its own row of pixels. In the Blocking version, shared memory is used, and individual threads write their results directly and in a synchronized manner. This prevents race conditions and reduces overhead when retrieving results after execution. However, this approach also leads to increased thread runtime because all threads can calculate in parallel but cannot write simultaneously. In the Non-Blocking version, each thread has its own memory for calculated values, avoiding race conditions as well. Once all threads have completed the calculations, the results are merged. However, additional time is required for result consolidation. The entire parallelization and synchronization are facilitated by the Java "Runnable" interface, and the code to be executed by the threads is simply written within the run method.
+
+# Documentation (German)
 [Bericht](Bericht.pdf)   
 [Pres Folien](Algo_Aufgabe_04_Präsentation.pdf)
 
